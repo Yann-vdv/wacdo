@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" xmlns:th=“http://www.thymeleaf.org”>
+    <head th:replace="~{layout :: page_head}"></head>
+    <body>
+        <nav th:replace="~{layout :: page_navbar}"></nav>
+
+        <div class="container py-3">
+            <div class="text-center my-4">COLLABORATEUR</div>
+        </div>
+
+        <div class="container">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Prénom</th>
+                    <th scope="col">Date d'embauche</th>
+                    <th scope="col">Administrateur</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${collaborateur.id}"></td>
+                    <td th:text="${collaborateur.nom}"></td>
+                    <td th:text="${collaborateur.prenom}"></td>
+                    <td th:text="${collaborateur.dateEmbauche}"></td>
+                    <td th:text="${collaborateur.administrateur}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer th:replace="~{layout :: page_footer}"></footer>
+    </body>
+</html>

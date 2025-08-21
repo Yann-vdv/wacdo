@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" xmlns:th=“http://www.thymeleaf.org”>
+    <head th:replace="~{layout :: page_head}"></head>
+    <body>
+        <nav th:replace="~{layout :: page_navbar}"></nav>
+
+        <div class="container py-3">
+            <div class="text-center my-4">FONCTION</div>
+        </div>
+
+        <div class="container">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nom</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${fonction.id}"></td>
+                    <td th:text="${fonction.nom}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer th:replace="~{layout :: page_footer}"></footer>
+    </body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" xmlns:th=“http://www.thymeleaf.org”>
+    <head th:replace="~{layout :: page_head}"></head>
+    <body>
+        <nav th:replace="~{layout :: page_navbar}"></nav>
+
+        <div class="container py-3">
+            <div class="text-center my-4">RESTAURANT</div>
+        </div>
+
+        <div class="container">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Adresse</th>
+                    <th scope="col">Code postal</th>
+                    <th scope="col">Ville</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${restaurant.id}"></td>
+                    <td th:text="${restaurant.nom}"></td>
+                    <td th:text="${restaurant.adresse}"></td>
+                    <td th:text="${restaurant.codePostal}"></td>
+                    <td th:text="${restaurant.ville}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer th:replace="~{layout :: page_footer}"></footer>
+    </body>
+</html>
