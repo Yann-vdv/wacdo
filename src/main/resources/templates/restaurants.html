@@ -22,7 +22,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="resto : ${restaurants}" th:onclick="|window.location.href='/restaurant/' + ${resto.id}|" style="cursor:pointer;">
+                <tr th:each="resto : ${response.data}" th:onclick="|window.location.href='/restaurant/' + ${resto.id}|" style="cursor:pointer;">
                     <td th:text="${resto.id}"></td>
                     <td th:text="${resto.nom}"></td>
                     <td th:text="${resto.adresse}"></td>

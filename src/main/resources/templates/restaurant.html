@@ -4,6 +4,8 @@
     <body>
         <nav th:replace="~{layout :: page_navbar}"></nav>
 
+        <div th:replace="~{layout :: notification(${response})}"></div>
+
         <div class="container py-3">
             <div class="text-center my-4">RESTAURANT</div>
         </div>
@@ -21,11 +23,11 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td th:text="${restaurant.id}"></td>
-                    <td th:text="${restaurant.nom}"></td>
-                    <td th:text="${restaurant.adresse}"></td>
-                    <td th:text="${restaurant.codePostal}"></td>
-                    <td th:text="${restaurant.ville}"></td>
+                    <td th:text="${response.data.id}"></td>
+                    <td th:text="${response.data.nom}"></td>
+                    <td th:text="${response.data.adresse}"></td>
+                    <td th:text="${response.data.codePostal}"></td>
+                    <td th:text="${response.data.ville}"></td>
                 </tr>
                 </tbody>
             </table>
