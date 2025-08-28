@@ -38,50 +38,23 @@
 
         <div th:fragment="notification (response)">
             <div th:if="response.notification">
-                <!--<div th:switch="${response.status}">
-                    <div th:case="T(com.gdu.wacdo.entities.Status).SUCCESS" class="toast align-items-center alert alert-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation data-bs-autohide data-bs-delay>
-                        <div class="d-flex">
-                            <div th:text="${response.message}" class="toast-body">
-                                Hello, world! This is a toast message.
-                            </div>
-                            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                    </div>
-                    <div th:case="T(com.gdu.wacdo.entities.Status).FAILURE" class="toast align-items-center alert alert-warning" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation data-bs-autohide data-bs-delay>
-                        <div class="d-flex">
-                            <div th:text="${response.message}" class="toast-body">
-                                Hello, world! This is a toast message.
-                            </div>
-                            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                    </div>
-                    <div th:case="T(com.gdu.wacdo.entities.Status).ERROR" class="toast align-items-center alert alert-danger" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation data-bs-autohide data-bs-delay>
-                        <div class="d-flex">
-                            <div th:text="${response.message}" class="toast-body">
-                                Hello, world! This is a toast message.
-                            </div>
-                            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                    </div>
-                </div>-->
-                <div class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                <div class="align-items-center alert position-fixed top-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true"  data-bs-delay="5000"
+                     th:classappend="${response.getAlertClass}">
                     <div class="d-flex">
-                        <div th:text="${response.message}" class="toast-body">
-                            Hello, world! This is a toast message.
-                        </div>
-                        <!--<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                        <div th:text="${response.message}" class="toast-body"></div>
+                        <button type="button" class="btn-close mx-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                 </div>
             </div>
-            <!--<div class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation data-bs-autohide data-bs-delay
-                 th:classappend="${response.status} == T(com.gdu.wacdo.entities.Status).SUCCESS ? ' alert-success' : (${response.status} == T(com.gdu.wacdo.entities.Status).FAILURE ? ' alert-warning' : (${response.status} == T(com.gdu.wacdo.entities.Status).ERROR ? ' alert-danger' : ''))}">
-                <div class="d-flex">
-                    <div th:text="${response.message}" class="toast-body">
-                        Hello, world! This is a toast message.
-                    </div>
-                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>-->
+            <script th:inline="javascript">
+                document.addEventListener("DOMContentLoaded", function () {
+                    const toastEl = document.querySelector('.alert');
+                    if (toastEl) {
+                        const toast = new bootstrap.Toast(toastEl);
+                        toast.show();
+                    }
+                });
+            </script>
         </div>
 
         <footer class="border-top bg-light text-muted text-center" th:fragment="page_footer">
@@ -90,4 +63,5 @@
             </div>
         </footer>
     </body>
+
 </html>

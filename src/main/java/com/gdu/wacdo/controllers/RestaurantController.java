@@ -4,6 +4,7 @@ import com.gdu.wacdo.DTO.RestaurantDTO;
 import com.gdu.wacdo.DTO.NewRestaurantDTO;
 import com.gdu.wacdo.entities.ApiResponse;
 import com.gdu.wacdo.entities.Restaurant;
+import com.gdu.wacdo.entities.Status;
 import com.gdu.wacdo.repositories.RestaurantRepository;
 
 import com.gdu.wacdo.services.RestaurantService;
@@ -40,11 +41,11 @@ public class RestaurantController {
         List<RestaurantDTO> restaurantsDTO = restaurantService.findAllForView();
         if (restaurantsDTO != null) {
             //model.addAttribute("restaurants", restaurantsDTO);
-            ApiResponse<List<RestaurantDTO>> response = ApiResponse.success(restaurantsDTO,true,"Restaurants récupérés avec succès");
+            ApiResponse<List<RestaurantDTO>> response = new ApiResponse<>(Status.SUCCESS,restaurantsDTO,true,"Restaurants récupérés avec succès");
             log.info("Response {}", response);
             model.addAttribute("response", response);
         } else {
-            ApiResponse<List<RestaurantDTO>> response = ApiResponse.error(true,"La récupération des restaurants a échouée");
+            ApiResponse<List<RestaurantDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des restaurants a échouée");
             model.addAttribute("response", response);
         }
         model.addAttribute("restaurant", new Restaurant());
@@ -56,11 +57,11 @@ public class RestaurantController {
         RestaurantDTO restaurant = restaurantService.findById(id);
 
         if (restaurant != null) {
-            ApiResponse<RestaurantDTO> response = ApiResponse.success(restaurant,true,"Restaurant récupéré avec succès");
+            ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.SUCCESS,restaurant,true,"Restaurant récupéré avec succès");
             model.addAttribute("response", response);
             return "restaurant";
         } else {
-            ApiResponse<RestaurantDTO> response = ApiResponse.error(true,"La récupération du restaurant a échouée");
+            ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération du restaurant a échouée");
             model.addAttribute("response", response);
             return "restaurants";
         }
@@ -71,11 +72,11 @@ public class RestaurantController {
         RestaurantDTO restaurant = restaurantService.create(newRestaurantDTO);
         if (restaurant != null) {
             //model.addAttribute("restaurant", restaurant);
-            ApiResponse<RestaurantDTO> response = ApiResponse.success(restaurant,true,"Restaurant créé avec succès");
+            ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.SUCCESS,restaurant,true,"Restaurant créé avec succès");
             model.addAttribute("response", response);
             return "restaurant";
         } else {
-            ApiResponse<RestaurantDTO> response = ApiResponse.error(true,"La création du restaurant a échouée");
+            ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La création du restaurant a échouée");
             model.addAttribute("response", response);
             return "restaurants";
         }

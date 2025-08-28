@@ -3,6 +3,7 @@ package com.gdu.wacdo.controllers;
 import com.gdu.wacdo.DTO.CollabDTO;
 import com.gdu.wacdo.DTO.NewCollabDTO;
 import com.gdu.wacdo.entities.ApiResponse;
+import com.gdu.wacdo.entities.Status;
 import com.gdu.wacdo.services.CollaborateurService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,11 +38,11 @@ public class CollaborateurController {
         List<CollabDTO> collabsDTO = collaborateurService.findAllForView();
         if (collabsDTO != null) {
             //model.addAttribute("collaborateurs", collabsDTO);
-            ApiResponse<List<CollabDTO>> response = ApiResponse.success(collabsDTO,true,"Collaborateurs récupérés avec succès");
+            ApiResponse<List<CollabDTO>> response = new ApiResponse<>(Status.SUCCESS,collabsDTO,true,"Collaborateurs récupérés avec succès");
             log.info("Response {}", response);
             model.addAttribute("response", response);
         } else {
-            ApiResponse<List<CollabDTO>> response = ApiResponse.error(true,"La récupération des collaborateurs a échouée");
+            ApiResponse<List<CollabDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des collaborateurs a échouée");
             model.addAttribute("response", response);
         }
         model.addAttribute("collaborateur", new Collaborateur());
@@ -53,11 +54,11 @@ public class CollaborateurController {
         CollabDTO collab = collaborateurService.findById(id);
 
         if (collab != null) {
-            ApiResponse<CollabDTO> response = ApiResponse.success(collab,true,"Collaborateur récupéré avec succès");
+            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.SUCCESS,collab,true,"Collaborateur récupéré avec succès");
             model.addAttribute("response", response);
             return "collaborateur";
         } else {
-            ApiResponse<CollabDTO> response = ApiResponse.error(true,"La récupération du collaborateur a échouée");
+            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération du collaborateur a échouée");
             model.addAttribute("response", response);
             return "collaborateurs";
         }
@@ -68,11 +69,11 @@ public class CollaborateurController {
         CollabDTO collab = collaborateurService.create(collaborateur);
         if (collab != null) {
             //model.addAttribute("collaborateur", collab);
-            ApiResponse<CollabDTO> response = ApiResponse.success(collab,true,"Collaborateur créé avec succès");
+            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.SUCCESS,collab,true,"Collaborateur créé avec succès");
             model.addAttribute("response", response);
             return "collaborateur";
         } else {
-            ApiResponse<CollabDTO> response = ApiResponse.error(true,"La création du collaborateur a échouée");
+            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La création du collaborateur a échouée");
             model.addAttribute("response", response);
             return "collaborateurs";
         }

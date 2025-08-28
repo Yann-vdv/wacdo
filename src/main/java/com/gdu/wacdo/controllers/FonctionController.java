@@ -4,6 +4,7 @@ import com.gdu.wacdo.DTO.FonctionDTO;
 import com.gdu.wacdo.DTO.NewFonctionDTO;
 import com.gdu.wacdo.entities.ApiResponse;
 import com.gdu.wacdo.entities.Fonction;
+import com.gdu.wacdo.entities.Status;
 import com.gdu.wacdo.services.FonctionService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,11 +45,11 @@ public class FonctionController {
         List<FonctionDTO> fonctionsDTO = fonctionService.findAllForView();
         if (fonctionsDTO != null) {
             //model.addAttribute("fonctions", fonctionsDTO);
-            ApiResponse<List<FonctionDTO>> response = ApiResponse.success(fonctionsDTO,true,"les fonctions ont été récupérés avec succès");
+            ApiResponse<List<FonctionDTO>> response = new ApiResponse<>(Status.SUCCESS,fonctionsDTO,true,"les fonctions ont été récupérés avec succès");
             log.info("Response {}", response);
             model.addAttribute("response", response);
         } else {
-            ApiResponse<List<FonctionDTO>> response = ApiResponse.error(true,"La récupération des fonctions a échouée");
+            ApiResponse<List<FonctionDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des fonctions a échouée");
             model.addAttribute("response", response);
         }
         model.addAttribute("fonction", new Fonction());
@@ -60,11 +61,11 @@ public class FonctionController {
         FonctionDTO fonction = fonctionService.findById(id);
 
         if (fonction != null) {
-            ApiResponse<FonctionDTO> response = ApiResponse.success(fonction,true,"la fonction a été récupéré avec succès");
+            ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.SUCCESS,fonction,true,"la fonction a été récupéré avec succès");
             model.addAttribute("response", response);
             return "fonction";
         } else {
-            ApiResponse<FonctionDTO> response = ApiResponse.error(true,"La récupération de la fonction a échouée");
+            ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération de la fonction a échouée");
             model.addAttribute("response", response);
             return "fonctions";
         }
@@ -75,11 +76,11 @@ public class FonctionController {
         FonctionDTO fonction = fonctionService.create(newFonctionDTO);
         if (fonction != null) {
             //model.addAttribute("fonction", fonction);
-            ApiResponse<FonctionDTO> response = ApiResponse.success(fonction,true,"la fonction a été créé avec succès");
+            ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.SUCCESS,fonction,true,"la fonction a été créé avec succès");
             model.addAttribute("response", response);
             return "fonction";
         } else {
-            ApiResponse<FonctionDTO> response = ApiResponse.error(true,"La création de la fonction a échouée");
+            ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La création de la fonction a échouée");
             model.addAttribute("response", response);
             return "fonctions";
         }
