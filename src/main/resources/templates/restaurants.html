@@ -4,6 +4,8 @@
     <body>
         <nav th:replace="~{layout :: page_navbar}"></nav>
 
+        <div th:replace="~{layout :: notification(${response})}"></div>
+
         <div class="container py-3">
             <div class="text-center my-4">RESTAURANTS</div>
         </div>
@@ -29,6 +31,29 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="container py-3">
+            <div class="text-center my-4">Nouveau Retaurant</div>
+            <form th:action="@{/restaurants/newRestaurant}" method="post" th:object="${restaurant}">
+                <div>
+                    <label for="nom">Nom</label>
+                    <input type="text" th:field="*{nom}" id="nom">
+                </div>
+                <div>
+                    <label for="adresse">adresse</label>
+                    <input type="text" th:field="*{adresse}" id="adresse">
+                </div>
+                <div>
+                    <label for="codePostal">code postal</label>
+                    <input type="text" th:field="*{codePostal}" id="codePostal">
+                </div>
+                <div>
+                    <label for="ville">ville</label>
+                    <input type="text" th:field="*{ville}" id="ville">
+                </div>
+                <button type="submit">Valider</button>
+            </form>
         </div>
 
         <footer th:replace="~{layout :: page_footer}"></footer>

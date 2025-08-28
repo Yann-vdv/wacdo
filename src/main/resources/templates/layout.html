@@ -36,6 +36,54 @@
             </div>
         </nav>
 
+        <div th:fragment="notification (response)">
+            <div th:if="response.notification">
+                <!--<div th:switch="${response.status}">
+                    <div th:case="T(com.gdu.wacdo.entities.Status).SUCCESS" class="toast align-items-center alert alert-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation data-bs-autohide data-bs-delay>
+                        <div class="d-flex">
+                            <div th:text="${response.message}" class="toast-body">
+                                Hello, world! This is a toast message.
+                            </div>
+                            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    <div th:case="T(com.gdu.wacdo.entities.Status).FAILURE" class="toast align-items-center alert alert-warning" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation data-bs-autohide data-bs-delay>
+                        <div class="d-flex">
+                            <div th:text="${response.message}" class="toast-body">
+                                Hello, world! This is a toast message.
+                            </div>
+                            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    <div th:case="T(com.gdu.wacdo.entities.Status).ERROR" class="toast align-items-center alert alert-danger" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation data-bs-autohide data-bs-delay>
+                        <div class="d-flex">
+                            <div th:text="${response.message}" class="toast-body">
+                                Hello, world! This is a toast message.
+                            </div>
+                            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>-->
+                <div class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                    <div class="d-flex">
+                        <div th:text="${response.message}" class="toast-body">
+                            Hello, world! This is a toast message.
+                        </div>
+                        <!--<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>-->
+                    </div>
+                </div>
+            </div>
+            <!--<div class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation data-bs-autohide data-bs-delay
+                 th:classappend="${response.status} == T(com.gdu.wacdo.entities.Status).SUCCESS ? ' alert-success' : (${response.status} == T(com.gdu.wacdo.entities.Status).FAILURE ? ' alert-warning' : (${response.status} == T(com.gdu.wacdo.entities.Status).ERROR ? ' alert-danger' : ''))}">
+                <div class="d-flex">
+                    <div th:text="${response.message}" class="toast-body">
+                        Hello, world! This is a toast message.
+                    </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>-->
+        </div>
+
         <footer class="border-top bg-light text-muted text-center" th:fragment="page_footer">
             <div class="container pb-5">
                 &copy; [[${#dates.format(#dates.createNow(), 'yyyy')}]] - Wacdo

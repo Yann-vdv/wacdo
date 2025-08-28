@@ -4,6 +4,8 @@
     <body>
         <nav th:replace="~{layout :: page_navbar}"></nav>
 
+        <div th:replace="~{layout :: notification(${response})}"></div>
+
         <div class="container py-3">
             <div class="text-center my-4">COLLABORATEURS</div>
         </div>
@@ -16,16 +18,16 @@
                     <th scope="col">Nom</th>
                     <th scope="col">Prénom</th>
                     <th scope="col">Date d'embauche</th>
-                    <th scope="col">Administrateur</th>
+                    <!--<th scope="col">Administrateur</th>-->
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="col : ${collaborateurs}" th:onclick="|window.location.href='/collaborateurs/' + ${col.id}|" style="cursor:pointer;">
+                <tr th:each="col : ${response.data}" th:onclick="|window.location.href='/collaborateurs/' + ${col.id}|" style="cursor:pointer;">
                     <td th:text="${col?.id}"></td>
                     <td th:text="${col?.nom}"></td>
                     <td th:text="${col?.prenom}"></td>
                     <td th:text="${col?.dateEmbauche}"></td>
-                    <td th:text="${col?.administrateur}"></td>
+                    <!--<td th:text="${col?.administrateur}"></td>-->
                 </tr>
                 </tbody>
             </table>

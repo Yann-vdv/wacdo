@@ -1,23 +1,20 @@
 package com.gdu.wacdo.controllers;
 
+import com.gdu.wacdo.DTO.CollabDTO;
+import com.gdu.wacdo.DTO.NewCollabDTO;
+import com.gdu.wacdo.entities.ApiResponse;
 import com.gdu.wacdo.services.CollaborateurService;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.gdu.wacdo.entities.Collaborateur;
 import com.gdu.wacdo.repositories.CollaborateurRepository;
@@ -37,27 +34,51 @@ public class CollaborateurController {
 
     @GetMapping
     public String collaborateurs(Model model){
-        model.addAttribute("collaborateurs", collaborateurService.findAllForView());
+        List<CollabDTO> collabsDTO = collaborateurService.findAllForView();
+        if (collabsDTO != null) {
+            //model.addAttribute("collaborateurs", collabsDTO);
+            ApiResponse<List<CollabDTO>> response = ApiResponse.success(collabsDTO,true,"Collaborateurs récupérés avec succès");
+            log.info("Response {}", response);
+            model.addAttribute("response", response);
+        } else {
+            ApiResponse<List<CollabDTO>> response = ApiResponse.error(true,"La récupération des collaborateurs a échouée");
+            model.addAttribute("response", response);
+        }
         model.addAttribute("collaborateur", new Collaborateur());
         return "collaborateurs";
     }
 
     @GetMapping("/{id}")
     public String collaborateurById(Model model, @PathVariable Long id) {
-        Optional<Collaborateur> colabOpt = collaborateurRepository.findById(id);
+        CollabDTO collab = collaborateurService.findById(id);
 
-        if (colabOpt.isPresent()) {
-            Collaborateur colab = colabOpt.get();
-            model.addAttribute("collaborateur", colab);
+        if (collab != null) {
+            ApiResponse<CollabDTO> response = ApiResponse.success(collab,true,"Collaborateur récupéré avec succès");
+            model.addAttribute("response", response);
+            return "collaborateur";
         } else {
-            System.out.println("Collaborateur not found with id: " + id);
-            return this.collaborateurs(model);
+            ApiResponse<CollabDTO> response = ApiResponse.error(true,"La récupération du collaborateur a échouée");
+            model.addAttribute("response", response);
+            return "collaborateurs";
         }
-
-        return "collaborateur";
     }
 
-    @GetMapping({"/api"})
+    @PostMapping({"/newCollab"})
+    public String newCollab(NewCollabDTO collaborateur, Model model) {
+        CollabDTO collab = collaborateurService.create(collaborateur);
+        if (collab != null) {
+            //model.addAttribute("collaborateur", collab);
+            ApiResponse<CollabDTO> response = ApiResponse.success(collab,true,"Collaborateur créé avec succès");
+            model.addAttribute("response", response);
+            return "collaborateur";
+        } else {
+            ApiResponse<CollabDTO> response = ApiResponse.error(true,"La création du collaborateur a échouée");
+            model.addAttribute("response", response);
+            return "collaborateurs";
+        }
+    }
+
+    /*@GetMapping({"/api"})
     public ResponseEntity<List<Collaborateur>> getAll() {
         return ResponseEntity.ok(collaborateurRepository.findAll());
     }
@@ -65,30 +86,18 @@ public class CollaborateurController {
     @GetMapping({"/api/{id}"})
     public ResponseEntity<Collaborateur> getById(@PathVariable Long id) {
         return collaborateurRepository.findById(id)
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping({"/api"})
     public ResponseEntity<Collaborateur> create(@RequestBody Collaborateur collaborateur) {
         Collaborateur saved = collaborateurRepository.save(collaborateur);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(saved.getId())
-            .toUri();
+                .path("/{id}")
+                .buildAndExpand(saved.getId())
+                .toUri();
         return ResponseEntity.created(location).body(saved);
-    }
-
-    @PostMapping({"/newColab"})
-    public String newColab(Collaborateur collaborateur, Model model) {
-        Collaborateur collab = collaborateurService.create(collaborateur);
-        if (collab != null) {
-            model.addAttribute("notification", "collaborateur créé");
-            return "collaborateur";
-        } else {
-            model.addAttribute("notification", "erreur lors de la création du collaborateur");
-            return "collaborateurs";
-        }
     }
 
     @PatchMapping({"/api/{id}"})
@@ -117,6 +126,6 @@ public class CollaborateurController {
         }
         collaborateurRepository.deleteById(id);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 
 }

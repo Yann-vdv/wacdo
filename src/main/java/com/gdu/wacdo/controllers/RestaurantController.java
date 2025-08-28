@@ -1,15 +1,16 @@
 package com.gdu.wacdo.controllers;
 
+import com.gdu.wacdo.DTO.RestaurantDTO;
+import com.gdu.wacdo.DTO.NewRestaurantDTO;
+import com.gdu.wacdo.entities.ApiResponse;
 import com.gdu.wacdo.entities.Restaurant;
 import com.gdu.wacdo.repositories.RestaurantRepository;
 
+import com.gdu.wacdo.services.RestaurantService;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,18 +28,60 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class RestaurantController {
 
     private final RestaurantRepository restaurantRepository;
+    private final RestaurantService restaurantService;
 
-    public RestaurantController(RestaurantRepository restaurantRepository) {
+    public RestaurantController(RestaurantRepository restaurantRepository, RestaurantService restaurantService) {
         this.restaurantRepository = restaurantRepository;
+        this.restaurantService = restaurantService;
     }
 
     @GetMapping
     public String restaurants(Model model){
-        model.addAttribute("restaurants", restaurantRepository.findAll());
+        List<RestaurantDTO> restaurantsDTO = restaurantService.findAllForView();
+        if (restaurantsDTO != null) {
+            //model.addAttribute("restaurants", restaurantsDTO);
+            ApiResponse<List<RestaurantDTO>> response = ApiResponse.success(restaurantsDTO,true,"Restaurants récupérés avec succès");
+            log.info("Response {}", response);
+            model.addAttribute("response", response);
+        } else {
+            ApiResponse<List<RestaurantDTO>> response = ApiResponse.error(true,"La récupération des restaurants a échouée");
+            model.addAttribute("response", response);
+        }
+        model.addAttribute("restaurant", new Restaurant());
         return "restaurants";
     }
 
-    @GetMapping({"/{id}"})
+    @GetMapping("/{id}")
+    public String restaurantById(Model model, @PathVariable Long id) {
+        RestaurantDTO restaurant = restaurantService.findById(id);
+
+        if (restaurant != null) {
+            ApiResponse<RestaurantDTO> response = ApiResponse.success(restaurant,true,"Restaurant récupéré avec succès");
+            model.addAttribute("response", response);
+            return "restaurant";
+        } else {
+            ApiResponse<RestaurantDTO> response = ApiResponse.error(true,"La récupération du restaurant a échouée");
+            model.addAttribute("response", response);
+            return "restaurants";
+        }
+    }
+
+    @PostMapping({"/newRestaurant"})
+    public String newRestaurant(NewRestaurantDTO newRestaurantDTO, Model model) {
+        RestaurantDTO restaurant = restaurantService.create(newRestaurantDTO);
+        if (restaurant != null) {
+            //model.addAttribute("restaurant", restaurant);
+            ApiResponse<RestaurantDTO> response = ApiResponse.success(restaurant,true,"Restaurant créé avec succès");
+            model.addAttribute("response", response);
+            return "restaurant";
+        } else {
+            ApiResponse<RestaurantDTO> response = ApiResponse.error(true,"La création du restaurant a échouée");
+            model.addAttribute("response", response);
+            return "restaurants";
+        }
+    }
+
+    /*@GetMapping({"/{id}"})
     public String restaurantsById(Model model, @PathVariable Long id){
         Optional<Restaurant> RestauOpt = restaurantRepository.findById(id);
 
@@ -104,5 +147,5 @@ public class RestaurantController {
         }
         restaurantRepository.deleteById(id);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 }

@@ -1,6 +1,8 @@
 package com.gdu.wacdo.services;
 
-import com.gdu.wacdo.DTO.ColabExample;
+import com.gdu.wacdo.DTO.NewCollabDTO;
+import com.gdu.wacdo.DTO.CollabDTO;
+import com.gdu.wacdo.entities.ApiResponse;
 import com.gdu.wacdo.entities.Collaborateur;
 import com.gdu.wacdo.repositories.CollaborateurRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -22,11 +25,15 @@ public class CollaborateurService {
         this.modelMapper = modelMapper;
     }
 
-    public Collaborateur create(Collaborateur collaborateur) {
+    public CollabDTO create(NewCollabDTO newCollabDTO) {
         try {
-            Collaborateur newColab = collaborateurRepository.save(collaborateur);
-            if(newColab.getId() != null) {
-                return newColab;
+            Collaborateur newCollab;
+            newCollab = modelMapper.map(newCollabDTO, Collaborateur.class);
+            Collaborateur createdCollab = collaborateurRepository.save(newCollab);
+            if(createdCollab.getId() != null) {
+                CollabDTO collabDTO;
+                collabDTO = modelMapper.map(createdCollab, CollabDTO.class);
+                return collabDTO;
             } else {
                 return null;
             }
@@ -36,17 +43,30 @@ public class CollaborateurService {
         }
     }
 
-    public List<Collaborateur> findAll() {
-        return collaborateurRepository.findAll();
+    public CollabDTO findById(Long id) {
+        try {
+            Optional<Collaborateur> collabOpt = collaborateurRepository.findById(id);
+            if (collabOpt.isPresent()) {
+                Collaborateur collab = collabOpt.get();
+                CollabDTO collabDTO;
+                collabDTO = modelMapper.map(collab, CollabDTO.class);
+                return collabDTO;
+            } else {
+                return null;
+            }
+        } catch (Exception err) {
+            log.error("get Collaborateur by id error : {}", err.getMessage());
+            return null;
+        }
     }
 
-    public List<ColabExample> findAllForView() {
-        List<Collaborateur> colabs = collaborateurRepository.findAll();
-        List<ColabExample> colabsDTO = new ArrayList<>();
-        for (Collaborateur collaborateur : colabs) {
-            colabsDTO.add(modelMapper.map(collaborateur,ColabExample.class));
+    public List<CollabDTO> findAllForView() {
+        List<Collaborateur> collabs = collaborateurRepository.findAll();
+        List<CollabDTO> collabsDTO = new ArrayList<>();
+        for (Collaborateur collaborateur : collabs) {
+            collabsDTO.add(modelMapper.map(collaborateur, CollabDTO.class));
         }
-        log.info("list colabsExemple : {}", colabsDTO);
-        return colabsDTO;
+        //log.info("list Collabs : {}", collabsDTO);
+        return collabsDTO;
     }
 }

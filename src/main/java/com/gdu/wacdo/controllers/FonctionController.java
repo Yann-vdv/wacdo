@@ -1,5 +1,10 @@
 package com.gdu.wacdo.controllers;
 
+import com.gdu.wacdo.DTO.FonctionDTO;
+import com.gdu.wacdo.DTO.NewFonctionDTO;
+import com.gdu.wacdo.entities.ApiResponse;
+import com.gdu.wacdo.entities.Fonction;
+import com.gdu.wacdo.services.FonctionService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
@@ -27,18 +32,60 @@ import com.gdu.wacdo.repositories.FonctionRepository;
 public class FonctionController {
 
     private final FonctionRepository fonctionRepository;
+    private final FonctionService fonctionService;
 
-    public FonctionController(FonctionRepository fonctionRepository) {
+    public FonctionController(FonctionRepository fonctionRepository, FonctionService fonctionService) {
         this.fonctionRepository = fonctionRepository;
+        this.fonctionService = fonctionService;
     }
 
     @GetMapping
     public String fonctions(Model model){
-        model.addAttribute("fonctions", fonctionRepository.findAll());
+        List<FonctionDTO> fonctionsDTO = fonctionService.findAllForView();
+        if (fonctionsDTO != null) {
+            //model.addAttribute("fonctions", fonctionsDTO);
+            ApiResponse<List<FonctionDTO>> response = ApiResponse.success(fonctionsDTO,true,"les fonctions ont été récupérés avec succès");
+            log.info("Response {}", response);
+            model.addAttribute("response", response);
+        } else {
+            ApiResponse<List<FonctionDTO>> response = ApiResponse.error(true,"La récupération des fonctions a échouée");
+            model.addAttribute("response", response);
+        }
+        model.addAttribute("fonction", new Fonction());
         return "fonctions";
     }
 
-    @GetMapping({"/{id}"})
+    @GetMapping("/{id}")
+    public String fonctionById(Model model, @PathVariable Long id) {
+        FonctionDTO fonction = fonctionService.findById(id);
+
+        if (fonction != null) {
+            ApiResponse<FonctionDTO> response = ApiResponse.success(fonction,true,"la fonction a été récupéré avec succès");
+            model.addAttribute("response", response);
+            return "fonction";
+        } else {
+            ApiResponse<FonctionDTO> response = ApiResponse.error(true,"La récupération de la fonction a échouée");
+            model.addAttribute("response", response);
+            return "fonctions";
+        }
+    }
+
+    @PostMapping({"/newFonction"})
+    public String newFonction(NewFonctionDTO newFonctionDTO, Model model) {
+        FonctionDTO fonction = fonctionService.create(newFonctionDTO);
+        if (fonction != null) {
+            //model.addAttribute("fonction", fonction);
+            ApiResponse<FonctionDTO> response = ApiResponse.success(fonction,true,"la fonction a été créé avec succès");
+            model.addAttribute("response", response);
+            return "fonction";
+        } else {
+            ApiResponse<FonctionDTO> response = ApiResponse.error(true,"La création de la fonction a échouée");
+            model.addAttribute("response", response);
+            return "fonctions";
+        }
+    }
+
+    /*@GetMapping({"/{id}"})
     public String FonctionsById(Model model, @PathVariable Long id){
         Optional<Fonction> fctOpt = fonctionRepository.findById(id);
 
@@ -95,7 +142,7 @@ public class FonctionController {
         }
         fonctionRepository.deleteById(id);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 
 
 }

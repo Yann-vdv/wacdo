@@ -1,0 +1,71 @@
+package com.gdu.wacdo.services;
+
+import com.gdu.wacdo.DTO.FonctionDTO;
+import com.gdu.wacdo.DTO.NewFonctionDTO;
+import com.gdu.wacdo.entities.Fonction;
+import com.gdu.wacdo.repositories.FonctionRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@Slf4j
+public class FonctionService {
+
+    private final FonctionRepository fonctionRepository;
+    private final ModelMapper modelMapper;
+
+    public FonctionService(FonctionRepository fonctionRepository, ModelMapper modelMapper) {
+        this.fonctionRepository = fonctionRepository;
+        this.modelMapper = modelMapper;
+    }
+
+    public FonctionDTO create(NewFonctionDTO newFonctionDTO) {
+        try {
+            Fonction newFonction;
+            newFonction = modelMapper.map(newFonctionDTO, Fonction.class);
+            Fonction createdFonction = fonctionRepository.save(newFonction);
+            if(createdFonction.getId() != null) {
+                FonctionDTO fonctionDTO;
+                fonctionDTO = modelMapper.map(createdFonction, FonctionDTO.class);
+                return fonctionDTO;
+            } else {
+                return null;
+            }
+        } catch(Exception err) {
+            log.error("Create Fonction error : {}", err.getMessage());
+            return null;
+        }
+    }
+
+    public FonctionDTO findById(Long id) {
+        try {
+            Optional<Fonction> fonctionOpt = fonctionRepository.findById(id);
+            if (fonctionOpt.isPresent()) {
+                Fonction fonction = fonctionOpt.get();
+                FonctionDTO fonctionDTO;
+                fonctionDTO = modelMapper.map(fonction, FonctionDTO.class);
+                return fonctionDTO;
+            } else {
+                return null;
+            }
+        } catch (Exception err) {
+            log.error("get Fonction by id error : {}", err.getMessage());
+            return null;
+        }
+    }
+
+    public List<FonctionDTO> findAllForView() {
+        List<Fonction> fonctions = fonctionRepository.findAll();
+        List<FonctionDTO> fonctionsDTO = new ArrayList<>();
+        for (Fonction fonction : fonctions) {
+            fonctionsDTO.add(modelMapper.map(fonction, FonctionDTO.class));
+        }
+        //log.info("list Fonctions : {}", fonctionsDTO);
+        return fonctionsDTO;
+    }
+}

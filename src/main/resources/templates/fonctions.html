@@ -4,6 +4,8 @@
     <body>
         <nav th:replace="~{layout :: page_navbar}"></nav>
 
+        <div th:replace="~{layout :: notification(${response})}"></div>
+
         <div class="container py-3">
             <div class="text-center my-4">FONCTIONS</div>
         </div>
@@ -23,6 +25,17 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="container py-3">
+            <div class="text-center my-4">Nouvelle Fonction</div>
+            <form th:action="@{/fonctions/newfonction}" method="post" th:object="${fonction}">
+                <div>
+                    <label for="nom">Nom</label>
+                    <input type="text" th:field="*{nom}" id="nom">
+                </div>
+                <button type="submit">Valider</button>
+            </form>
         </div>
 
         <footer th:replace="~{layout :: page_footer}"></footer>
