@@ -8,14 +8,10 @@ import com.gdu.wacdo.services.CollaborateurService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import com.gdu.wacdo.entities.Collaborateur;
 import com.gdu.wacdo.repositories.CollaborateurRepository;
@@ -56,6 +52,7 @@ public class CollaborateurController {
         if (collab != null) {
             ApiResponse<CollabDTO> response = new ApiResponse<>(Status.SUCCESS,collab,true,"Collaborateur récupéré avec succès");
             model.addAttribute("response", response);
+            model.addAttribute("collaborateur", collab);
             return "collaborateur";
         } else {
             ApiResponse<CollabDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération du collaborateur a échouée");
@@ -64,7 +61,7 @@ public class CollaborateurController {
         }
     }
 
-    @PostMapping({"/newCollab"})
+    @PostMapping({"/new"})
     public String newCollab(NewCollabDTO collaborateur, Model model) {
         CollabDTO collab = collaborateurService.create(collaborateur);
         if (collab != null) {
@@ -79,54 +76,31 @@ public class CollaborateurController {
         }
     }
 
-    /*@GetMapping({"/api"})
-    public ResponseEntity<List<Collaborateur>> getAll() {
-        return ResponseEntity.ok(collaborateurRepository.findAll());
-    }
-
-    @GetMapping({"/api/{id}"})
-    public ResponseEntity<Collaborateur> getById(@PathVariable Long id) {
-        return collaborateurRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PostMapping({"/api"})
-    public ResponseEntity<Collaborateur> create(@RequestBody Collaborateur collaborateur) {
-        Collaborateur saved = collaborateurRepository.save(collaborateur);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(saved.getId())
-                .toUri();
-        return ResponseEntity.created(location).body(saved);
-    }
-
-    @PatchMapping({"/api/{id}"})
-    public ResponseEntity<Collaborateur> update(@PathVariable Long id, @RequestBody Collaborateur updates) {
-        return collaborateurRepository.findById(id)
-            .map(existing -> {
-                if (updates.getNom() != null) {
-                    existing.setNom(updates.getNom());
-                }
-                if (updates.getPrenom() != null) {
-                    existing.setPrenom(updates.getPrenom());
-                }
-                if (updates.getDateEmbauche() != null) {
-                    existing.setDateEmbauche(updates.getDateEmbauche());
-                }
-                Collaborateur saved = collaborateurRepository.save(existing);
-                return ResponseEntity.ok(saved);
-            })
-            .orElse(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/api/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!collaborateurRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+    @PostMapping({"/edit/{id}"})
+    public String editCollab(@PathVariable Long id, CollabDTO collaborateur, Model model) {
+        CollabDTO collab = collaborateurService.edit(id, collaborateur);
+        if (collab != null) {
+            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.SUCCESS,collab,true,"Collaborateur modifié avec succès");
+            model.addAttribute("response", response);
+            model.addAttribute("collaborateur", response.getData());
+        } else {
+            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La modification du collaborateur a échouée");
+            model.addAttribute("response", response);
         }
-        collaborateurRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }*/
+        return "collaborateur";
+    }
 
+    @DeleteMapping("/delete/{id}")
+    public String deleteCollab(@PathVariable Long id, Model model) {
+        boolean res = collaborateurService.delete(id);
+        if (res) {
+            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.SUCCESS,null,true,"Collaborateur supprimé avec succès");
+            model.addAttribute("response", response);
+            return "collaborateurs";
+        } else {
+            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La suppression du collaborateur a échouée");
+            model.addAttribute("response", response);
+            return "collaborateur";
+        }
+    }
 }

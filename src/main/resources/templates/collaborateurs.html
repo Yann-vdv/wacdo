@@ -1,64 +1,68 @@
 <!doctype html>
 <html lang="en" xmlns:th=“http://www.thymeleaf.org”>
     <head th:replace="~{layout :: page_head}"></head>
-    <body>
-        <nav th:replace="~{layout :: page_navbar}"></nav>
+    <body class="d-flex flex-column min-vh-100">
+        <header th:replace="~{layout :: page_navbar}"></header>
 
         <div th:replace="~{layout :: notification(${response})}"></div>
 
-        <div class="container py-3">
-            <div class="text-center my-4">COLLABORATEURS</div>
-        </div>
+        <main class="flex-grow-1">
+            <div class="container py-3">
+                <h1 class="text-center my-4">COLLABORATEURS</h1>
+            </div>
 
-        <div class="container">
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Nom</th>
-                    <th scope="col">Prénom</th>
-                    <th scope="col">Date d'embauche</th>
-                    <!--<th scope="col">Administrateur</th>-->
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="col : ${response.data}" th:onclick="|window.location.href='/collaborateurs/' + ${col.id}|" style="cursor:pointer;">
-                    <td th:text="${col?.id}"></td>
-                    <td th:text="${col?.nom}"></td>
-                    <td th:text="${col?.prenom}"></td>
-                    <td th:text="${col?.dateEmbauche}"></td>
-                    <!--<td th:text="${col?.administrateur}"></td>-->
-                </tr>
-                </tbody>
-            </table>
-        </div>
+            <div class="container">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Prénom</th>
+                        <th scope="col">Date d'embauche</th>
+                        <!--<th scope="col">Administrateur</th>-->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="col : ${response.data}" th:onclick="|window.location.href='/collaborateurs/' + ${col.id}|" style="cursor:pointer;">
+                        <td th:text="${col?.id}"></td>
+                        <td th:text="${col?.nom}"></td>
+                        <td th:text="${col?.prenom}"></td>
+                        <td th:text="${col?.dateEmbauche}"></td>
+                        <!--<td th:text="${col?.administrateur}"></td>-->
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-        <div class="container py-3">
-            <div class="text-center my-4">Nouveau collaborateur</div>
-            <form th:action="@{/collaborateurs/newColab}" method="post" th:object="${collaborateur}">
-                <div>
-                    <label for="nom">Nom</label>
-                    <input type="text" th:field="*{nom}" id="nom">
-                </div>
-                <div>
-                    <label for="prenom">Prénom</label>
-                    <input type="text" th:field="*{prenom}" id="prenom">
-                </div>
-                <div>
-                    <label for="dateEmbauche">Date d'embauche</label>
-                    <input type="date" th:field="*{dateEmbauche}" id="dateEmbauche">
-                </div>
-                <div>
-                    <label for="administrateur">Administrateur</label>
-                    <input type="checkbox" th:field="*{administrateur}" id="administrateur">
-                </div>
-                <div>
-                    <label for="passWord">Mot de passe</label>
-                    <input type="password" th:field="*{passWord}" id="passWord">
-                </div>
-                <button type="submit">Valider</button>
-            </form>
-        </div>
+            <div class="container mb-5">
+                <h3 class="text-center my-4">Nouveau collaborateur</h3>
+                <form th:action="@{/collaborateurs/new}" method="post" th:object="${collaborateur}" class="d-flex flex-column row-gap-2">
+                    <div>
+                        <label for="nom" class="me-1">Nom</label>
+                        <input type="text" th:field="*{nom}" id="nom">
+                    </div>
+                    <div>
+                        <label for="prenom" class="me-1">Prénom</label>
+                        <input type="text" th:field="*{prenom}" id="prenom">
+                    </div>
+                    <div>
+                        <label for="dateEmbauche" class="me-1">Date d'embauche</label>
+                        <input type="date" th:field="*{dateEmbauche}" id="dateEmbauche">
+                    </div>
+                    <div>
+                        <label for="administrateur" class="me-1">Administrateur</label>
+                        <input type="checkbox" th:field="*{administrateur}" id="administrateur">
+                    </div>
+                    <div>
+                        <label for="passWord" class="me-1">Mot de passe</label>
+                        <input type="password" th:field="*{passWord}" id="passWord">
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-success">Valider</button>
+                    </div>
+                </form>
+            </div>
+        </main>
 
         <footer th:replace="~{layout :: page_footer}"></footer>
     </body>

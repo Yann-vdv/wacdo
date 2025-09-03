@@ -7,10 +7,12 @@ import com.gdu.wacdo.entities.Collaborateur;
 import com.gdu.wacdo.repositories.CollaborateurRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -40,6 +42,42 @@ public class CollaborateurService {
         } catch(Exception err) {
             log.error("Create Collaborateur error : {}", err.getMessage());
             return null;
+        }
+    }
+
+    public CollabDTO edit(long id, CollabDTO collabDTO) {
+        try {
+            Optional<Collaborateur> updated = collaborateurRepository.findById(id)
+                .map(existing -> {
+                    if (!Objects.equals(collabDTO.getNom(), existing.getNom())) {
+                        existing.setNom(collabDTO.getNom());
+                    }
+                    if (!Objects.equals(collabDTO.getPrenom(), existing.getPrenom())) {
+                        existing.setPrenom(collabDTO.getPrenom());
+                    }
+                    if (!Objects.equals(collabDTO.getDateEmbauche(), existing.getDateEmbauche())) {
+                        existing.setDateEmbauche(collabDTO.getDateEmbauche());
+                    }
+                    return collaborateurRepository.save(existing);
+                });
+            return updated.map(entity -> modelMapper.map(entity, CollabDTO.class))
+                    .orElse(null);
+        } catch(Exception err) {
+            log.error("Edit Collaborateur error : {}", err.getMessage());
+            return null;
+        }
+    }
+
+    public boolean delete(long id) {
+        if (!collaborateurRepository.existsById(id)) {
+            return false;
+        }
+        try {
+            collaborateurRepository.deleteById(id);
+            return true;
+        } catch (EmptyResultDataAccessException err) {
+            log.error("Delete Collaborateur error : {}", err.getMessage());
+            return false;
         }
     }
 

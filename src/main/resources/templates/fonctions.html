@@ -1,42 +1,46 @@
 <!doctype html>
 <html lang="en" xmlns:th=“http://www.thymeleaf.org”>
     <head th:replace="~{layout :: page_head}"></head>
-    <body>
-        <nav th:replace="~{layout :: page_navbar}"></nav>
+    <body class="d-flex flex-column min-vh-100">
+        <header th:replace="~{layout :: page_navbar}"></header>
 
         <div th:replace="~{layout :: notification(${response})}"></div>
 
-        <div class="container py-3">
-            <div class="text-center my-4">FONCTIONS</div>
-        </div>
+        <main class="flex-grow-1">
+            <div class="container py-3">
+                <h1 class="text-center my-4">FONCTIONS</h1>
+            </div>
 
-        <div class="container">
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Nom</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="fct : ${response.data}" th:onclick="|window.location.href='/fonctions/' + ${fct.id}|" style="cursor:pointer;">
-                    <td th:text="${fct.id}"></td>
-                    <td th:text="${fct.nom}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+            <div class="container">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nom</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="fct : ${response.data}" th:onclick="|window.location.href='/fonctions/' + ${fct.id}|" style="cursor:pointer;">
+                        <td th:text="${fct.id}"></td>
+                        <td th:text="${fct.nom}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-        <div class="container py-3">
-            <div class="text-center my-4">Nouvelle Fonction</div>
-            <form th:action="@{/fonctions/newfonction}" method="post" th:object="${fonction}">
-                <div>
-                    <label for="nom">Nom</label>
-                    <input type="text" th:field="*{nom}" id="nom">
-                </div>
-                <button type="submit">Valider</button>
-            </form>
-        </div>
+            <div class="container mb-5">
+                <h2 class="text-center my-4">Nouvelle Fonction</h2>
+                <form th:action="@{/fonctions/newfonction}" method="post" th:object="${fonction}" class="d-flex flex-column row-gap-2">
+                    <div>
+                        <label for="nom" class="me-1">Nom</label>
+                        <input type="text" th:field="*{nom}" id="nom">
+                    </div>
+                    <div>
+                        <button type="submit">Valider</button>
+                    </div>
+                </form>
+            </div>
+        </main>
 
         <footer th:replace="~{layout :: page_footer}"></footer>
     </body>

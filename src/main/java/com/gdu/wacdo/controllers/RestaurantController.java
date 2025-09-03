@@ -1,6 +1,7 @@
 package com.gdu.wacdo.controllers;
 
 import com.gdu.wacdo.DTO.RestaurantDTO;
+import com.gdu.wacdo.DTO.RestaurantDTO;
 import com.gdu.wacdo.DTO.NewRestaurantDTO;
 import com.gdu.wacdo.entities.ApiResponse;
 import com.gdu.wacdo.entities.Restaurant;
@@ -67,7 +68,7 @@ public class RestaurantController {
         }
     }
 
-    @PostMapping({"/newRestaurant"})
+    @PostMapping({"/new"})
     public String newRestaurant(NewRestaurantDTO newRestaurantDTO, Model model) {
         RestaurantDTO restaurant = restaurantService.create(newRestaurantDTO);
         if (restaurant != null) {
@@ -82,71 +83,31 @@ public class RestaurantController {
         }
     }
 
-    /*@GetMapping({"/{id}"})
-    public String restaurantsById(Model model, @PathVariable Long id){
-        Optional<Restaurant> RestauOpt = restaurantRepository.findById(id);
-
-        if (RestauOpt.isPresent()) {
-            Restaurant Restau = RestauOpt.get();
-            model.addAttribute("Restaurant", Restau);
+    @PostMapping({"/edit/{id}"})
+    public String editRestaurant(@PathVariable Long id, RestaurantDTO editedRestaurant, Model model) {
+        RestaurantDTO restaurant = restaurantService.edit(id, editedRestaurant);
+        if (restaurant != null) {
+            ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.SUCCESS,restaurant,true,"Restaurant modifié avec succès");
+            model.addAttribute("response", response);
+            model.addAttribute("restaurant", response.getData());
         } else {
-            System.out.println("Restaurant not found with id: " + id);
-            return this.restaurants(model);
+            ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La modification du restaurant a échouée");
+            model.addAttribute("response", response);
         }
-
         return "restaurant";
     }
 
-    @GetMapping({"/api"})
-    public ResponseEntity<List<Restaurant>> getAll() {
-        return ResponseEntity.ok(restaurantRepository.findAll());
-    }
-
-    @GetMapping({"/api/{id}"})
-    public ResponseEntity<Restaurant> getById(@PathVariable Long id) {
-        return restaurantRepository.findById(id)
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PostMapping({"/api"})
-    public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant) {
-        Restaurant saved = restaurantRepository.save(restaurant);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(saved.getId())
-            .toUri();
-        return ResponseEntity.created(location).body(saved);
-    }
-
-    @PatchMapping({"/api/{id}"})
-    public ResponseEntity<Restaurant> update(@PathVariable Long id, @RequestBody Restaurant updates) {
-        return restaurantRepository.findById(id)
-            .map(existing -> {
-                if (updates.getNom() != null) {
-                    existing.setNom(updates.getNom());
-                }
-                if (updates.getAdresse() != null) {
-                    existing.setAdresse(updates.getAdresse());
-                }
-                if (updates.getCodePostal() != null) {
-                    existing.setCodePostal(updates.getCodePostal());
-                }
-                if (updates.getVille() != null) {
-                    existing.setVille(updates.getVille());
-                }
-                Restaurant saved = restaurantRepository.save(existing);
-                return ResponseEntity.ok(saved);
-            })
-            .orElse(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/api/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!restaurantRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+    @DeleteMapping("/delete/{id}")
+    public String deleteRestaurant(@PathVariable Long id, Model model) {
+        boolean res = restaurantService.delete(id);
+        if (res) {
+            ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.SUCCESS,null,true,"Restaurant supprimé avec succès");
+            model.addAttribute("response", response);
+            return "restaurants";
+        } else {
+            ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La suppression du restaurant a échouée");
+            model.addAttribute("response", response);
+            return "restaurant";
         }
-        restaurantRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }*/
+    }
 }

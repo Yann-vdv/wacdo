@@ -8,23 +8,16 @@ import com.gdu.wacdo.entities.Status;
 import com.gdu.wacdo.services.FonctionService;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.gdu.wacdo.entities.Fonction;
 import com.gdu.wacdo.repositories.FonctionRepository;
 
 @Controller
@@ -63,6 +56,7 @@ public class FonctionController {
         if (fonction != null) {
             ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.SUCCESS,fonction,true,"la fonction a été récupéré avec succès");
             model.addAttribute("response", response);
+            model.addAttribute("fonction", fonction);
             return "fonction";
         } else {
             ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération de la fonction a échouée");
@@ -71,7 +65,7 @@ public class FonctionController {
         }
     }
 
-    @PostMapping({"/newFonction"})
+    @PostMapping({"/new"})
     public String newFonction(NewFonctionDTO newFonctionDTO, Model model) {
         FonctionDTO fonction = fonctionService.create(newFonctionDTO);
         if (fonction != null) {
@@ -85,65 +79,32 @@ public class FonctionController {
             return "fonctions";
         }
     }
-
-    /*@GetMapping({"/{id}"})
-    public String FonctionsById(Model model, @PathVariable Long id){
-        Optional<Fonction> fctOpt = fonctionRepository.findById(id);
-
-        if (fctOpt.isPresent()) {
-            Fonction fct = fctOpt.get();
-            model.addAttribute("Fonction", fct);
+    
+    @PostMapping({"/edit/{id}"})
+    public String editFonction(@PathVariable Long id, FonctionDTO editedFonction, Model model) {
+        FonctionDTO fonction = fonctionService.edit(id, editedFonction);
+        if (fonction != null) {
+            ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.SUCCESS,fonction,true,"Fonction modifié avec succès");
+            model.addAttribute("response", response);
+            model.addAttribute("fonction", response.getData());
         } else {
-            System.out.println("Fonction not found with id: " + id);
-            return this.fonctions(model);
+            ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La modification du fonction a échouée");
+            model.addAttribute("response", response);
         }
-
         return "fonction";
     }
 
-    @GetMapping({"/api"})
-    public ResponseEntity<List<Fonction>> getAll() {
-        return ResponseEntity.ok(fonctionRepository.findAll());
-    }
-
-    @GetMapping({"/api/{id}"})
-    public ResponseEntity<Fonction> getById(@PathVariable Long id) {
-        return fonctionRepository.findById(id)
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PostMapping({"/api"})
-    public ResponseEntity<Fonction> create(@RequestBody Fonction fonction) {
-        Fonction saved = fonctionRepository.save(fonction);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(saved.getId())
-            .toUri();
-        return ResponseEntity.created(location).body(saved);
-    }
-
-    @PatchMapping({"/api/{id}"})
-    public ResponseEntity<Fonction> update(@PathVariable Long id, @RequestBody Fonction updates) {
-        return fonctionRepository.findById(id)
-            .map(existing -> {
-                if (updates.getNom() != null) {
-                    existing.setNom(updates.getNom());
-                }
-                Fonction saved = fonctionRepository.save(existing);
-                return ResponseEntity.ok(saved);
-            })
-            .orElse(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/api/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!fonctionRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+    @DeleteMapping("/delete/{id}")
+    public String deleteFonction(@PathVariable Long id, Model model) {
+        boolean res = fonctionService.delete(id);
+        if (res) {
+            ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.SUCCESS,null,true,"Fonction supprimé avec succès");
+            model.addAttribute("response", response);
+            return "fonctions";
+        } else {
+            ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La suppression du fonction a échouée");
+            model.addAttribute("response", response);
+            return "fonction";
         }
-        fonctionRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }*/
-
-
+    }
 }

@@ -6,10 +6,12 @@ import com.gdu.wacdo.entities.Fonction;
 import com.gdu.wacdo.repositories.FonctionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -42,6 +44,36 @@ public class FonctionService {
         }
     }
 
+    public FonctionDTO edit(long id, FonctionDTO fonctionDTO) {
+        try {
+            Optional<Fonction> updated = fonctionRepository.findById(id)
+                .map(existing -> {
+                    if (!Objects.equals(fonctionDTO.getNom(), existing.getNom())) {
+                        existing.setNom(fonctionDTO.getNom());
+                    }
+                    return fonctionRepository.save(existing);
+                });
+            return updated.map(entity -> modelMapper.map(entity, FonctionDTO.class))
+                    .orElse(null);
+        } catch(Exception err) {
+            log.error("Edit Fonction error : {}", err.getMessage());
+            return null;
+        }
+    }
+
+    public boolean delete(long id) {
+        if (!fonctionRepository.existsById(id)) {
+            return false;
+        }
+        try {
+            fonctionRepository.deleteById(id);
+            return true;
+        } catch (EmptyResultDataAccessException err) {
+            log.error("Delete Fonction error : {}", err.getMessage());
+            return false;
+        }
+    }
+    
     public FonctionDTO findById(Long id) {
         try {
             Optional<Fonction> fonctionOpt = fonctionRepository.findById(id);

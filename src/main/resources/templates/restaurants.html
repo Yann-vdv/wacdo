@@ -1,60 +1,64 @@
 <!doctype html>
 <html lang="en" xmlns:th=“http://www.thymeleaf.org”>
     <head th:replace="~{layout :: page_head}"></head>
-    <body>
-        <nav th:replace="~{layout :: page_navbar}"></nav>
+    <body class="d-flex flex-column min-vh-100">
+        <header th:replace="~{layout :: page_navbar}"></header>
 
         <div th:replace="~{layout :: notification(${response})}"></div>
 
-        <div class="container py-3">
-            <div class="text-center my-4">RESTAURANTS</div>
-        </div>
+        <main class="flex-grow-1">
+            <div class="container py-3">
+                <h1 class="text-center my-4">RESTAURANTS</h1>
+            </div>
 
-        <div class="container">
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Nom</th>
-                    <th scope="col">Adresse</th>
-                    <th scope="col">Code postal</th>
-                    <th scope="col">Ville</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="resto : ${response.data}" th:onclick="|window.location.href='/restaurant/' + ${resto.id}|" style="cursor:pointer;">
-                    <td th:text="${resto.id}"></td>
-                    <td th:text="${resto.nom}"></td>
-                    <td th:text="${resto.adresse}"></td>
-                    <td th:text="${resto.codePostal}"></td>
-                    <td th:text="${resto.ville}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+            <div class="container">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Adresse</th>
+                        <th scope="col">Code postal</th>
+                        <th scope="col">Ville</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="resto : ${response.data}" th:onclick="|window.location.href='/restaurant/' + ${resto.id}|" style="cursor:pointer;">
+                        <td th:text="${resto.id}"></td>
+                        <td th:text="${resto.nom}"></td>
+                        <td th:text="${resto.adresse}"></td>
+                        <td th:text="${resto.codePostal}"></td>
+                        <td th:text="${resto.ville}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-        <div class="container py-3">
-            <div class="text-center my-4">Nouveau Retaurant</div>
-            <form th:action="@{/restaurants/newRestaurant}" method="post" th:object="${restaurant}">
-                <div>
-                    <label for="nom">Nom</label>
-                    <input type="text" th:field="*{nom}" id="nom">
-                </div>
-                <div>
-                    <label for="adresse">adresse</label>
-                    <input type="text" th:field="*{adresse}" id="adresse">
-                </div>
-                <div>
-                    <label for="codePostal">code postal</label>
-                    <input type="text" th:field="*{codePostal}" id="codePostal">
-                </div>
-                <div>
-                    <label for="ville">ville</label>
-                    <input type="text" th:field="*{ville}" id="ville">
-                </div>
-                <button type="submit">Valider</button>
-            </form>
-        </div>
+            <div class="container mb-5">
+                <h3 class="text-center my-4">Nouveau Retaurant</h3>
+                <form th:action="@{/restaurants/newRestaurant}" method="post" th:object="${restaurant}" class="d-flex flex-column row-gap-2">
+                    <div>
+                        <label for="nom" class="me-1">Nom</label>
+                        <input type="text" th:field="*{nom}" id="nom">
+                    </div>
+                    <div>
+                        <label for="adresse" class="me-1">adresse</label>
+                        <input type="text" th:field="*{adresse}" id="adresse">
+                    </div>
+                    <div>
+                        <label for="codePostal" class="me-1">code postal</label>
+                        <input type="text" th:field="*{codePostal}" id="codePostal">
+                    </div>
+                    <div>
+                        <label for="ville" class="me-1">ville</label>
+                        <input type="text" th:field="*{ville}" id="ville">
+                    </div>
+                    <div>
+                        <button type="submit">Valider</button>
+                    </div>
+                </form>
+            </div>
+        </main>
 
         <footer th:replace="~{layout :: page_footer}"></footer>
     </body>
