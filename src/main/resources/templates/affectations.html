@@ -1,37 +1,79 @@
 <!doctype html>
 <html lang="en" xmlns:th=“http://www.thymeleaf.org”>
     <head th:replace="~{layout :: page_head}"></head>
-    <body>
-        <nav th:replace="~{layout :: page_navbar}"></nav>
+    <body class="d-flex flex-column min-vh-100">
+        <header th:replace="~{layout :: page_navbar}"></header>
 
-        <div class="container py-3">
-            <div class="text-center my-4">AFFECTATIONS</div>
-        </div>
+        <div th:replace="~{layout :: notification(${response})}"></div>
 
-        <div class="container">
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Date de Debut</th>
-                    <th scope="col">Date de Fin</th>
-                    <th scope="col">Restaurant</th>
-                    <th scope="col">Collaborateur</th>
-                    <th scope="col">Fonction</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="affectation : ${affectations}" th:onclick="|window.location.href='/affectations/' + ${affectation.id}|" style="cursor:pointer;">
-                    <td th:text="${affectation.id}"></td>
-                    <td th:text="${affectation.dateDebut}"></td>
-                    <td th:text="${affectation.dateFin}"></td>
-                    <td th:text="${affectation.restaurant.nom}"></td>
-                    <td th:text="${affectation.collaborateur.nom}"></td>
-                    <td th:text="${affectation.fonction.nom}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <main class="flex-grow-1">
+            <div class="container py-3">
+                <h1 class="text-center my-4">AFFECTATIONS</h1>
+            </div>
+
+            <div class="container">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Date de Debut</th>
+                        <th scope="col">Date de Fin</th>
+                        <th scope="col">Restaurant</th>
+                        <th scope="col">Collaborateur</th>
+                        <th scope="col">Fonction</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="affectation : ${response.data}" th:onclick="|window.location.href='/affectations/' + ${affectation.id}|" style="cursor:pointer;">
+                        <td th:text="${affectation.id}"></td>
+                        <td th:text="${affectation.dateDebut}"></td>
+                        <td th:text="${affectation.dateFin}"></td>
+                        <td th:text="${affectation.restaurant.nom}"></td>
+                        <td th:text="${affectation.collab.prenom + ' ' + affectation.collab.nom}"></td>
+                        <td th:text="${affectation.fonction.nom}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="container mb-5" th:if="${processData}">
+                <h3 class="text-center my-4">Nouvelle affectation</h3>
+                <form th:action="@{/affectations/new}" method="post" th:object="${affectation}" class="d-flex flex-column row-gap-2">
+                    <div>
+                        <label for="dateDebut" class="me-1">Date de Debut</label>
+                        <input type="date" th:field="*{dateDebut}" id="dateDebut">
+                    </div>
+                    <div>
+                        <label for="dateFin" class="me-1">Date de Fin</label>
+                        <input type="date" th:field="*{dateFin}" id="dateFin">
+                    </div>
+                    <div>
+                        <label for="restaurant" class="me-1">Restaurant</label>
+                        <select id="restaurant" th:field="*{restaurant}">
+                            <option value=""></option>
+                            <option th:each="restaurant : ${processData.restaurants}" th:value="${restaurant.id}" th:text="${restaurant.nom}"></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="collaborateur" class="me-1">Collaborateur</label>
+                        <select id="collaborateur" th:field="*{collaborateur}">
+                            <option value=""></option>
+                            <option th:each="collab : ${processData.collabs}" th:value="${collab.id}" th:text="${collab.prenom + ' ' + collab.nom}"></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="fonction" class="me-1">Fonction</label>
+                        <select id="fonction" th:field="*{fonction}">
+                            <option value=""></option>
+                            <option th:each="fonction : ${processData.fonctions}" th:value="${fonction.id}" th:text="${fonction.nom}"></option>
+                        </select>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-success">Valider</button>
+                    </div>
+                </form>
+            </div>
+        </main>
 
         <footer th:replace="~{layout :: page_footer}"></footer>
     </body>

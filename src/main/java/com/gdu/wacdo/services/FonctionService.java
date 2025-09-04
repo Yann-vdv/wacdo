@@ -3,6 +3,7 @@ package com.gdu.wacdo.services;
 import com.gdu.wacdo.DTO.FonctionDTO;
 import com.gdu.wacdo.DTO.NewFonctionDTO;
 import com.gdu.wacdo.entities.Fonction;
+import com.gdu.wacdo.entities.Restaurant;
 import com.gdu.wacdo.repositories.FonctionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -87,6 +88,16 @@ public class FonctionService {
             }
         } catch (Exception err) {
             log.error("get Fonction by id error : {}", err.getMessage());
+            return null;
+        }
+    }
+
+    public Fonction findByIdFull(long id) {
+        try {
+            Optional<Fonction> fonctionOpt = fonctionRepository.findById(id);
+            return fonctionOpt.orElse(null);
+        } catch (Exception err) {
+            log.error("get full Fonction by id error : {}", err.getMessage());
             return null;
         }
     }

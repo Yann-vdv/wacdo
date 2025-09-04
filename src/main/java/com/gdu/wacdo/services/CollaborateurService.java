@@ -4,6 +4,7 @@ import com.gdu.wacdo.DTO.NewCollabDTO;
 import com.gdu.wacdo.DTO.CollabDTO;
 import com.gdu.wacdo.entities.ApiResponse;
 import com.gdu.wacdo.entities.Collaborateur;
+import com.gdu.wacdo.entities.Collaborateur;
 import com.gdu.wacdo.repositories.CollaborateurRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -94,6 +95,16 @@ public class CollaborateurService {
             }
         } catch (Exception err) {
             log.error("get Collaborateur by id error : {}", err.getMessage());
+            return null;
+        }
+    }
+
+    public Collaborateur findByIdFull(long id) {
+        try {
+            Optional<Collaborateur> collaborateurOpt = collaborateurRepository.findById(id);
+            return collaborateurOpt.orElse(null);
+        } catch (Exception err) {
+            log.error("get full Collaborateur by id error : {}", err.getMessage());
             return null;
         }
     }

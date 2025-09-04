@@ -6,13 +6,13 @@ import com.gdu.wacdo.entities.Restaurant;
 import lombok.Data;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 public class NewAffectationDTO {
-    private String nom;
-    private Date dateDebut;
-    private Date dateFin;
-    private Restaurant restaurant;
-    private Collaborateur collaborateur;
-    private Fonction fonction;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
+    private Long restaurant;
+    private Long collaborateur;
+    private Long fonction;
 }

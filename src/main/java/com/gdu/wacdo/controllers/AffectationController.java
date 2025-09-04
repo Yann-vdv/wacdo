@@ -1,25 +1,26 @@
 package com.gdu.wacdo.controllers;
 
+import com.gdu.wacdo.DTO.AffectationDTO;
+import com.gdu.wacdo.DTO.DataDTO;
+import com.gdu.wacdo.DTO.EditAffectationDTO;
+import com.gdu.wacdo.DTO.NewAffectationDTO;
+import com.gdu.wacdo.entities.ApiResponse;
+import com.gdu.wacdo.entities.Affectation;
+import com.gdu.wacdo.entities.Status;
+import com.gdu.wacdo.repositories.AffectationRepository;
+import com.gdu.wacdo.services.AffectationService;
+import com.gdu.wacdo.services.DataService;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.gdu.wacdo.entities.Affectation;
-import com.gdu.wacdo.repositories.AffectationRepository;
 
 @Controller
 @Slf4j
@@ -27,85 +28,97 @@ import com.gdu.wacdo.repositories.AffectationRepository;
 public class AffectationController {
 
     private final AffectationRepository affectationRepository;
+    private final AffectationService affectationService;
+    private final DataService dataService;
 
-    public AffectationController(AffectationRepository affectationRepository) {
+    public AffectationController(AffectationRepository affectationRepository, AffectationService affectationService, DataService dataService) {
         this.affectationRepository = affectationRepository;
+        this.affectationService = affectationService;
+        this.dataService = dataService;
     }
 
     @GetMapping
-    public String Affectations(Model model){
-        model.addAttribute("affectations", affectationRepository.findAll());
+    public String affectations(Model model){
+        List<AffectationDTO> affectationsDTO = affectationService.findAllForView();
+        if (affectationsDTO != null) {
+            DataDTO processData = dataService.getProcessData();
+            if (!processData.getFonctions().isEmpty() && !processData.getRestaurants().isEmpty() && !processData.getCollabs().isEmpty()) {
+                model.addAttribute("processData", processData);
+                model.addAttribute("affectation", new Affectation());
+            }
+            ApiResponse<List<AffectationDTO>> response = new ApiResponse<>(Status.SUCCESS,affectationsDTO,true,"Affectations récupérés avec succès");
+            model.addAttribute("response", response);
+        } else {
+            ApiResponse<List<AffectationDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des affectations a échouée");
+            model.addAttribute("response", response);
+        }
         return "affectations";
     }
 
-    @GetMapping({"/{id}"})
-    public String AffectationsById(Model model, @PathVariable Long id){
-         Optional<Affectation> affectationOpt = affectationRepository.findById(id);
+    @GetMapping("/{id}")
+    public String affectationById(Model model, @PathVariable Long id) {
+        AffectationDTO affectation = affectationService.findById(id);
 
-        if (affectationOpt.isPresent()) {
-            Affectation affectation = affectationOpt.get();
-            model.addAttribute("affectation", affectation);
+        if (affectation != null) {
+            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.SUCCESS,affectation,true,"Affectation récupéré avec succès");
+            model.addAttribute("response", response);
+
+            DataDTO processData = dataService.getProcessData();
+            if (!processData.getFonctions().isEmpty() && !processData.getRestaurants().isEmpty() && !processData.getCollabs().isEmpty()) {
+                model.addAttribute("processData", processData);
+                EditAffectationDTO editAffectationDTO = new EditAffectationDTO(affectation);
+                log.info("initial edit data : {}", editAffectationDTO);
+                model.addAttribute("affectation", editAffectationDTO);
+            }
+            return "affectation";
         } else {
-            System.out.println("affectation not found with id: " + id);
-            return this.Affectations(model);
+            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération du affectation a échouée");
+            model.addAttribute("response", response);
+            return "affectations";
         }
+    }
 
+    @PostMapping({"/new"})
+    public String newAffectation(NewAffectationDTO newAffectation, Model model) {
+        AffectationDTO affectation = affectationService.create(newAffectation);
+        if (affectation != null) {
+            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.SUCCESS,affectation,true,"Affectation créé avec succès");
+            model.addAttribute("response", response);
+            return "affectation";
+        } else {
+            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La création du affectation a échouée");
+            model.addAttribute("response", response);
+            return "affectations";
+        }
+    }
+
+    @PostMapping({"/edit/{id}"})
+    public String editAffectation(@PathVariable Long id, EditAffectationDTO editedAffectation, Model model) {
+        log.info("edited edit data : {}", editedAffectation);
+        AffectationDTO affectation = affectationService.edit(id, editedAffectation);
+        if (affectation != null) {
+            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.SUCCESS,affectation,true,"Affectation modifié avec succès");
+            model.addAttribute("response", response);
+            EditAffectationDTO editAffectationDTO = new EditAffectationDTO(response.getData());
+            model.addAttribute("affectation", editAffectationDTO);
+        } else {
+            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La modification du affectation a échouée");
+            model.addAttribute("response", response);
+        }
         return "affectation";
     }
 
-    @GetMapping({"/api"})
-    public ResponseEntity<List<Affectation>> getAll() {
-        return ResponseEntity.ok(affectationRepository.findAll());
-    }
-
-    @GetMapping({"/api/{id}"})
-    public ResponseEntity<Affectation> getById(@PathVariable Long id) {
-        return affectationRepository.findById(id)
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PostMapping({"/api"})
-    public ResponseEntity<Affectation> create(@RequestBody Affectation affectation) {
-        Affectation saved = affectationRepository.save(affectation);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(saved.getId())
-            .toUri();
-        return ResponseEntity.created(location).body(saved);
-    }
-
-    @PatchMapping({"/api/{id}"})
-    public ResponseEntity<Affectation> update(@PathVariable Long id, @RequestBody Affectation updates) {
-        return affectationRepository.findById(id)
-            .map(existing -> {
-                if (updates.getDateDebut() != null) {
-                    existing.setDateDebut(updates.getDateDebut());
-                }
-                if (updates.getDateFin() != null) {
-                    existing.setDateFin(updates.getDateFin());
-                }
-                if (updates.getRestaurant() != null) {
-                    existing.setRestaurant(updates.getRestaurant());
-                }
-                if (updates.getCollaborateur() != null) {
-                    existing.setCollaborateur(updates.getCollaborateur());
-                }
-                if (updates.getFonction() != null) {
-                    existing.setFonction(updates.getFonction());
-                }
-                Affectation saved = affectationRepository.save(existing);
-                return ResponseEntity.ok(saved);
-            })
-            .orElse(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/api/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!affectationRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+    @DeleteMapping("/delete/{id}")
+    public String deleteAffectation(@PathVariable Long id, Model model) {
+        boolean res = affectationService.delete(id);
+        if (res) {
+            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.SUCCESS,null,true,"Affectation supprimé avec succès");
+            model.addAttribute("response", response);
+            return "affectations";
+        } else {
+            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La suppression du affectation a échouée");
+            model.addAttribute("response", response);
+            return "affectation";
         }
-        affectationRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 }

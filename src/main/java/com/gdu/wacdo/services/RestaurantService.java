@@ -1,8 +1,11 @@
 package com.gdu.wacdo.services;
 
+import com.gdu.wacdo.DTO.CollabDTO;
 import com.gdu.wacdo.DTO.RestaurantDTO;
 import com.gdu.wacdo.DTO.NewRestaurantDTO;
+import com.gdu.wacdo.entities.Collaborateur;
 import com.gdu.wacdo.entities.Restaurant;
+import com.gdu.wacdo.repositories.AffectationRepository;
 import com.gdu.wacdo.repositories.RestaurantRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -19,10 +22,12 @@ import java.util.Optional;
 public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
+    private final AffectationRepository affectationRepository;
     private final ModelMapper modelMapper;
 
-    public RestaurantService(RestaurantRepository restaurantRepository, ModelMapper modelMapper) {
+    public RestaurantService(RestaurantRepository restaurantRepository, AffectationRepository affectationRepository, ModelMapper modelMapper) {
         this.restaurantRepository = restaurantRepository;
+        this.affectationRepository = affectationRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -99,13 +104,31 @@ public class RestaurantService {
         }
     }
 
+    public Restaurant findByIdFull(long id) {
+        try {
+            Optional<Restaurant> restaurantOpt = restaurantRepository.findById(id);
+            return restaurantOpt.orElse(null);
+        } catch (Exception err) {
+            log.error("get full Restaurant by id error : {}", err.getMessage());
+            return null;
+        }
+    }
+
     public List<RestaurantDTO> findAllForView() {
         List<Restaurant> restaurants = restaurantRepository.findAll();
         List<RestaurantDTO> restaurantsDTO = new ArrayList<>();
         for (Restaurant restaurant : restaurants) {
             restaurantsDTO.add(modelMapper.map(restaurant, RestaurantDTO.class));
         }
-        //log.info("list Restaurants : {}", restaurantsDTO);
         return restaurantsDTO;
+    }
+
+    public List<CollabDTO> findCurrentCollabs(long restaurantId) {
+        List<Collaborateur> collabs = affectationRepository.findCurrentEmployeesByRestaurant(restaurantId);
+        List<CollabDTO> collabsDTO = new ArrayList<>();
+        for (Collaborateur collab : collabs) {
+            collabsDTO.add(modelMapper.map(collab, CollabDTO.class));
+        }
+        return collabsDTO;
     }
 }

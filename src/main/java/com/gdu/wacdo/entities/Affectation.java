@@ -1,6 +1,6 @@
 package com.gdu.wacdo.entities;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -14,8 +14,8 @@ public class Affectation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date dateDebut;
-    private Date dateFin;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
     
     @ManyToOne
     @JoinColumn(name = "restaurant_id", nullable = false)

@@ -1,5 +1,6 @@
 package com.gdu.wacdo.controllers;
 
+import com.gdu.wacdo.DTO.CollabDTO;
 import com.gdu.wacdo.DTO.RestaurantDTO;
 import com.gdu.wacdo.DTO.RestaurantDTO;
 import com.gdu.wacdo.DTO.NewRestaurantDTO;
@@ -41,7 +42,6 @@ public class RestaurantController {
     public String restaurants(Model model){
         List<RestaurantDTO> restaurantsDTO = restaurantService.findAllForView();
         if (restaurantsDTO != null) {
-            //model.addAttribute("restaurants", restaurantsDTO);
             ApiResponse<List<RestaurantDTO>> response = new ApiResponse<>(Status.SUCCESS,restaurantsDTO,true,"Restaurants récupérés avec succès");
             log.info("Response {}", response);
             model.addAttribute("response", response);
@@ -56,6 +56,7 @@ public class RestaurantController {
     @GetMapping("/{id}")
     public String restaurantById(Model model, @PathVariable Long id) {
         RestaurantDTO restaurant = restaurantService.findById(id);
+        List<CollabDTO> collabs = restaurantService.findCurrentCollabs(id);
 
         if (restaurant != null) {
             ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.SUCCESS,restaurant,true,"Restaurant récupéré avec succès");

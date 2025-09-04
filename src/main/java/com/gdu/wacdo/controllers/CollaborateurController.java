@@ -33,7 +33,6 @@ public class CollaborateurController {
     public String collaborateurs(Model model){
         List<CollabDTO> collabsDTO = collaborateurService.findAllForView();
         if (collabsDTO != null) {
-            //model.addAttribute("collaborateurs", collabsDTO);
             ApiResponse<List<CollabDTO>> response = new ApiResponse<>(Status.SUCCESS,collabsDTO,true,"Collaborateurs récupérés avec succès");
             log.info("Response {}", response);
             model.addAttribute("response", response);
@@ -65,7 +64,6 @@ public class CollaborateurController {
     public String newCollab(NewCollabDTO collaborateur, Model model) {
         CollabDTO collab = collaborateurService.create(collaborateur);
         if (collab != null) {
-            //model.addAttribute("collaborateur", collab);
             ApiResponse<CollabDTO> response = new ApiResponse<>(Status.SUCCESS,collab,true,"Collaborateur créé avec succès");
             model.addAttribute("response", response);
             return "collaborateur";
