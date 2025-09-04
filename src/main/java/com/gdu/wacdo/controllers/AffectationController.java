@@ -9,7 +9,6 @@ import com.gdu.wacdo.entities.Affectation;
 import com.gdu.wacdo.entities.Status;
 import com.gdu.wacdo.repositories.AffectationRepository;
 import com.gdu.wacdo.services.AffectationService;
-import com.gdu.wacdo.services.DataService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -29,19 +28,17 @@ public class AffectationController {
 
     private final AffectationRepository affectationRepository;
     private final AffectationService affectationService;
-    private final DataService dataService;
 
-    public AffectationController(AffectationRepository affectationRepository, AffectationService affectationService, DataService dataService) {
+    public AffectationController(AffectationRepository affectationRepository, AffectationService affectationService) {
         this.affectationRepository = affectationRepository;
         this.affectationService = affectationService;
-        this.dataService = dataService;
     }
 
     @GetMapping
     public String affectations(Model model){
         List<AffectationDTO> affectationsDTO = affectationService.findAllForView();
         if (affectationsDTO != null) {
-            DataDTO processData = dataService.getProcessData();
+            DataDTO processData = affectationService.getProcessData();
             if (!processData.getFonctions().isEmpty() && !processData.getRestaurants().isEmpty() && !processData.getCollabs().isEmpty()) {
                 model.addAttribute("processData", processData);
                 model.addAttribute("affectation", new Affectation());
@@ -62,12 +59,12 @@ public class AffectationController {
         if (affectation != null) {
             ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.SUCCESS,affectation,true,"Affectation récupéré avec succès");
             model.addAttribute("response", response);
-
-            DataDTO processData = dataService.getProcessData();
+            DataDTO processData = affectationService.getProcessData();
             if (!processData.getFonctions().isEmpty() && !processData.getRestaurants().isEmpty() && !processData.getCollabs().isEmpty()) {
                 model.addAttribute("processData", processData);
                 EditAffectationDTO editAffectationDTO = new EditAffectationDTO(affectation);
                 log.info("initial edit data : {}", editAffectationDTO);
+                log.info("test type : {}", editAffectationDTO.getDateDebut());
                 model.addAttribute("affectation", editAffectationDTO);
             }
             return "affectation";

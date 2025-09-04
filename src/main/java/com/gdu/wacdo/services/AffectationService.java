@@ -1,8 +1,6 @@
 package com.gdu.wacdo.services;
 
-import com.gdu.wacdo.DTO.AffectationDTO;
-import com.gdu.wacdo.DTO.EditAffectationDTO;
-import com.gdu.wacdo.DTO.NewAffectationDTO;
+import com.gdu.wacdo.DTO.*;
 import com.gdu.wacdo.entities.Affectation;
 import com.gdu.wacdo.entities.Collaborateur;
 import com.gdu.wacdo.entities.Fonction;
@@ -129,5 +127,13 @@ public class AffectationService {
         }
         log.info("list Affectations : {}", affectationsDTO);
         return affectationsDTO;
+    }
+
+    public DataDTO getProcessData() {
+        List<CollabDTO> collabs = collaborateurService.findAllForView();
+        List<RestaurantDTO> restaurants = restaurantService.findAllForView();
+        List<FonctionDTO> fonctions = fonctionService.findAllForView();
+
+        return new DataDTO(collabs, restaurants, fonctions);
     }
 }

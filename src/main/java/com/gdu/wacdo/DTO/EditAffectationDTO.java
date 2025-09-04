@@ -1,17 +1,22 @@
 package com.gdu.wacdo.DTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Slf4j
 public class EditAffectationDTO {
     private Long id;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateDebut;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateFin;
     private Long restaurant;
     private Long collaborateur;
@@ -25,14 +30,5 @@ public class EditAffectationDTO {
         this.restaurant = affectationDTO.getRestaurant().getId();
         this.collaborateur = affectationDTO.getCollaborateur().getId();
         this.fonction = affectationDTO.getFonction().getId();
-    }
-
-    public EditAffectationDTO(Long id, LocalDate dateDebut, LocalDate dateFin, Long restaurant, Long collaborateur, Long fonction) {
-        this.id = id;
-        this.dateDebut = dateDebut;
-        this.dateFin = dateFin;
-        this.restaurant = restaurant;
-        this.collaborateur = collaborateur;
-        this.fonction = fonction;
     }
 }
