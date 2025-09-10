@@ -23,4 +23,21 @@ public interface AffectationRepository extends JpaRepository<Affectation, Long> 
             "AND a.dateDebut <= CURRENT_DATE " +
             "AND (a.dateFin IS NULL OR a.dateFin >= CURRENT_DATE)")
     List<Collaborateur> findCurrentEmployeesByRestaurant(@Param("restaurantId") Long restaurantId);
+
+    @Query("SELECT a FROM Affectation a " +
+            "WHERE a.collaborateur.id = :collaborateurId " +
+            "AND a.dateDebut <= CURRENT_DATE " +
+            "AND (a.dateFin IS NULL OR a.dateFin >= CURRENT_DATE)")
+    List<Affectation> findCurrentByCollaborateurId(@Param("collaborateurId") Long collaborateurId);
+
+    @Query("SELECT a FROM Affectation a " +
+            "WHERE a.collaborateur.id = :collaborateurId " +
+            "AND a.dateFin < CURRENT_DATE " +
+            "ORDER BY a.dateDebut DESC")
+    List<Affectation> findHistoryByCollaborateurId(@Param("collaborateurId") Long collaborateurId);
+
+    @Query("SELECT a FROM Affectation a " +
+            "WHERE a.collaborateur.id = :collaborateurId " +
+            "ORDER BY a.dateDebut DESC")
+    List<Affectation> findByCollaborateurIdOrdered(@Param("collaborateurId") Long collaborateurId);
 }

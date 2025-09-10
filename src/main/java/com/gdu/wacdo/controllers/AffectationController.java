@@ -63,8 +63,6 @@ public class AffectationController {
             if (!processData.getFonctions().isEmpty() && !processData.getRestaurants().isEmpty() && !processData.getCollabs().isEmpty()) {
                 model.addAttribute("processData", processData);
                 EditAffectationDTO editAffectationDTO = new EditAffectationDTO(affectation);
-                log.info("initial edit data : {}", editAffectationDTO);
-                log.info("test type : {}", editAffectationDTO.getDateDebut());
                 model.addAttribute("affectation", editAffectationDTO);
             }
             return "affectation";

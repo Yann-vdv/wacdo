@@ -23,7 +23,6 @@ public class EditAffectationDTO {
     private Long fonction;
 
     public EditAffectationDTO(AffectationDTO affectationDTO) {
-        log.info("construct editAffDTO : {}", affectationDTO);
         this.id = affectationDTO.getId();
         this.dateDebut = affectationDTO.getDateDebut();
         this.dateFin = affectationDTO.getDateFin();

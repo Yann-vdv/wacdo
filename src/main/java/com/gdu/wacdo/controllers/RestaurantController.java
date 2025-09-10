@@ -51,13 +51,13 @@ public class RestaurantController {
     @GetMapping("/{id}")
     public String restaurantById(Model model, @PathVariable Long id) {
         RestaurantDTO restaurant = restaurantService.findById(id);
-        List<CollabDTO> collabs = restaurantService.findCurrentCollabs(id);
-        log.info("collabs by resto : {}", collabs);
+        List<CollabDTO> currentCollabs = restaurantService.findCurrentCollabs(id);
 
         if (restaurant != null) {
             ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.SUCCESS,restaurant,true,"Restaurant récupéré avec succès");
             model.addAttribute("response", response);
             model.addAttribute("restaurant", response.getData());
+            model.addAttribute("currentCollabs", currentCollabs);
             return "restaurant";
         } else {
             ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération du restaurant a échouée");

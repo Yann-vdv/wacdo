@@ -1,10 +1,14 @@
 package com.gdu.wacdo.services;
 
+import com.gdu.wacdo.DTO.AffectationDTO;
+import com.gdu.wacdo.DTO.CollaborateurAffectationsDTO;
 import com.gdu.wacdo.DTO.NewCollabDTO;
 import com.gdu.wacdo.DTO.CollabDTO;
+import com.gdu.wacdo.entities.Affectation;
 import com.gdu.wacdo.entities.ApiResponse;
 import com.gdu.wacdo.entities.Collaborateur;
 import com.gdu.wacdo.entities.Collaborateur;
+import com.gdu.wacdo.repositories.AffectationRepository;
 import com.gdu.wacdo.repositories.CollaborateurRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -21,10 +25,12 @@ import java.util.Optional;
 public class CollaborateurService {
 
     private final CollaborateurRepository collaborateurRepository;
+    private final AffectationRepository affectationRepository;
     private final ModelMapper modelMapper;
 
-    public CollaborateurService(CollaborateurRepository collaborateurRepository, ModelMapper modelMapper) {
+    public CollaborateurService(CollaborateurRepository collaborateurRepository, AffectationRepository affectationRepository, ModelMapper modelMapper) {
         this.collaborateurRepository = collaborateurRepository;
+        this.affectationRepository = affectationRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -117,5 +123,20 @@ public class CollaborateurService {
         }
         //log.info("list Collabs : {}", collabsDTO);
         return collabsDTO;
+    }
+
+    public CollaborateurAffectationsDTO findAffectations(long collaborateurId) {
+        List<Affectation> affectations = affectationRepository.findByCollaborateurId(collaborateurId);
+        List<AffectationDTO> current = new ArrayList<>();
+        List<AffectationDTO> history = new ArrayList<>();
+        for (Affectation affectation : affectations) {
+            AffectationDTO dto = modelMapper.map(affectation, AffectationDTO.class);
+            if (affectation.getDateFin() == null) {
+                current.add(dto);
+            } else {
+                history.add(dto);
+            }
+        }
+        return new CollaborateurAffectationsDTO(current, history);
     }
 }

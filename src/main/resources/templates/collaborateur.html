@@ -34,31 +34,84 @@
                 </table>
             </div>
 
-            <div class="container mb-5">
+            <div class="container my-2">
                 <h3 class="text-center my-4">Modifier le collaborateur</h3>
-                <form th:action="@{/collaborateurs/edit/{id}(id=${response.data.id})}" method="post" th:object="${collaborateur}" class="d-flex flex-column row-gap-2">
-                    <div>
-                        <label for="nom" class="me-1">Nom</label>
-                        <input type="text" th:field="*{nom}" id="nom">
+                <form th:action="@{/collaborateurs/edit/{id}(id=${response.data.id})}" method="post" th:object="${collaborateur}">
+                    <div class="d-flex column-gap-4 justify-content-center">
+                        <div>
+                            <label for="nom" class="me-1">Nom</label>
+                            <input type="text" th:field="*{nom}" id="nom">
+                        </div>
+                        <div>
+                            <label for="prenom" class="me-1">Prénom</label>
+                            <input type="text" th:field="*{prenom}" id="prenom">
+                        </div>
+                        <div>
+                            <label for="dateEmbauche" class="me-1">Date d'embauche</label>
+                            <input type="date" th:field="*{dateEmbauche}" id="dateEmbauche">
+                        </div>
                     </div>
-                    <div>
-                        <label for="prenom" class="me-1">Prénom</label>
-                        <input type="text" th:field="*{prenom}" id="prenom">
-                    </div>
-                    <div>
-                        <label for="dateEmbauche" class="me-1">Date d'embauche</label>
-                        <input type="date" th:field="*{dateEmbauche}" id="dateEmbauche">
-                    </div>
-                    <div>
+                    <div class="d-flex column-gap-2 justify-content-around mt-3">
                         <button type="submit" class="btn btn-success">Valider</button>
+                        <div>
+                            <a th:href="@{/collaborateurs/delete/{id}(id=${response.data.id})}" class="btn btn-danger">
+                                Supprimer
+                            </a>
+                        </div>
                     </div>
                 </form>
-                <div class="mt-3">
-                    <a th:href="@{/collaborateurs/delete/{id}(id=${response.data.id})}" class="btn btn-danger">
-                        Supprimer
-                    </a>
-                </div>
             </div>
+
+            <div class="container" th:if="${collaborateurAff != null and collaborateurAff.getCurrentAffectations != null and !collaborateurAff.getCurrentAffectations.empty}">
+                <h3 class="text-center my-4">Affectation en cours</h3>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Date de Debut</th>
+                        <th scope="col">Restaurant</th>
+                        <th scope="col">Collaborateur</th>
+                        <th scope="col">Fonction</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="affectation : ${collaborateurAff.getCurrentAffectations}" th:onclick="|window.location.href='/affectations/' + ${affectation.id}|" style="cursor:pointer;">
+                        <td th:text="${affectation.id}"></td>
+                        <td th:text="${affectation.dateDebut}"></td>
+                        <td th:text="${affectation.restaurant.nom}"></td>
+                        <td th:text="${affectation.collaborateur.prenom + ' ' + affectation.collaborateur.nom}"></td>
+                        <td th:text="${affectation.fonction.nom}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="container" th:if="${collaborateurAff != null and collaborateurAff.getHistory != null}">
+                <h3 class="text-center my-4">Historique des affectations</h3>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Date de Debut</th>
+                        <th scope="col">Date de Fin</th>
+                        <th scope="col">Restaurant</th>
+                        <th scope="col">Collaborateur</th>
+                        <th scope="col">Fonction</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="affectation : ${collaborateurAff.getHistory}" th:onclick="|window.location.href='/affectations/' + ${affectation.id}|" style="cursor:pointer;">
+                        <td th:text="${affectation.id}"></td>
+                        <td th:text="${affectation.dateDebut}"></td>
+                        <td th:text="${affectation.dateFin}"></td>
+                        <td th:text="${affectation.restaurant.nom}"></td>
+                        <td th:text="${affectation.collaborateur.prenom + ' ' + affectation.collaborateur.nom}"></td>
+                        <td th:text="${affectation.fonction.nom}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
         </main>
 
         <footer th:replace="~{layout :: page_footer}"></footer>

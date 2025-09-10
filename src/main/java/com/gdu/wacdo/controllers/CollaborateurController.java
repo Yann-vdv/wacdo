@@ -1,6 +1,8 @@
 package com.gdu.wacdo.controllers;
 
+import com.gdu.wacdo.DTO.AffectationDTO;
 import com.gdu.wacdo.DTO.CollabDTO;
+import com.gdu.wacdo.DTO.CollaborateurAffectationsDTO;
 import com.gdu.wacdo.DTO.NewCollabDTO;
 import com.gdu.wacdo.entities.ApiResponse;
 import com.gdu.wacdo.entities.Status;
@@ -47,11 +49,13 @@ public class CollaborateurController {
     @GetMapping("/{id}")
     public String collaborateurById(Model model, @PathVariable Long id) {
         CollabDTO collab = collaborateurService.findById(id);
+        CollaborateurAffectationsDTO collabAff = collaborateurService.findAffectations(id);
 
         if (collab != null) {
             ApiResponse<CollabDTO> response = new ApiResponse<>(Status.SUCCESS,collab,true,"Collaborateur récupéré avec succès");
             model.addAttribute("response", response);
             model.addAttribute("collaborateur", collab);
+            model.addAttribute("collaborateurAff",collabAff);
             return "collaborateur";
         } else {
             ApiResponse<CollabDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération du collaborateur a échouée");
