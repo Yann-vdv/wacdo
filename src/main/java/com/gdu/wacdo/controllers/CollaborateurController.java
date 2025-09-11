@@ -1,15 +1,13 @@
 package com.gdu.wacdo.controllers;
 
-import com.gdu.wacdo.DTO.AffectationDTO;
-import com.gdu.wacdo.DTO.CollabDTO;
-import com.gdu.wacdo.DTO.CollaborateurAffectationsDTO;
-import com.gdu.wacdo.DTO.NewCollabDTO;
+import com.gdu.wacdo.DTO.*;
 import com.gdu.wacdo.entities.ApiResponse;
 import com.gdu.wacdo.entities.Status;
 import com.gdu.wacdo.services.CollaborateurService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,13 +62,39 @@ public class CollaborateurController {
     @GetMapping("/{id}")
     public String collaborateurById(Model model, @PathVariable Long id) {
         CollabDTO collab = collaborateurService.findById(id);
-        CollaborateurAffectationsDTO collabAff = collaborateurService.findAffectations(id);
+        CollaborateurAffectationFilterDTO emptyFilter = new CollaborateurAffectationFilterDTO();
+        List<AffectationDTO> collabCurrentAff = collaborateurService.findCurrentAffectationsForView(id);
+        List<AffectationDTO> collabHistoryAff = collaborateurService.findHistoryAffectationsForViewFiltred(id, emptyFilter);
 
         if (collab != null) {
             ApiResponse<CollabDTO> response = new ApiResponse<>(Status.SUCCESS,collab,true,"Collaborateur récupéré avec succès");
             model.addAttribute("response", response);
             model.addAttribute("collaborateur", collab);
-            model.addAttribute("collaborateurAff",collabAff);
+            model.addAttribute("filter", emptyFilter);
+            model.addAttribute("collabCurrentAff",collabCurrentAff);
+            model.addAttribute("collabHistoryAff",collabHistoryAff);
+            return "collaborateur";
+        } else {
+            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération du collaborateur a échouée");
+            model.addAttribute("response", response);
+            return "collaborateurs";
+        }
+    }
+
+    @PostMapping("/{id}/filter")
+    public String collaborateurByIdFiltered(CollaborateurAffectationFilterDTO filter, Model model, @PathVariable Long id) {
+        CollabDTO collab = collaborateurService.findById(id);
+        CollaborateurAffectationFilterDTO emptyFilter = new CollaborateurAffectationFilterDTO();
+        List<AffectationDTO> collabCurrentAff = collaborateurService.findCurrentAffectationsForView(id);
+        List<AffectationDTO> collabHistoryAff = collaborateurService.findHistoryAffectationsForViewFiltred(id, filter != null ? filter : emptyFilter);
+
+        if (collab != null) {
+            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.SUCCESS,collab,true,"Collaborateur récupéré avec succès");
+            model.addAttribute("response", response);
+            model.addAttribute("collaborateur", collab);
+            model.addAttribute("filter", emptyFilter);
+            model.addAttribute("collabCurrentAff",collabCurrentAff);
+            model.addAttribute("collabHistoryAff",collabHistoryAff);
             return "collaborateur";
         } else {
             ApiResponse<CollabDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération du collaborateur a échouée");

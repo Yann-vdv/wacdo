@@ -68,21 +68,95 @@
 
             <div class="container" th:if="${currentCollabs != null}">
                 <h3 class="text-center my-4">Collaborateurs en poste</h3>
+                <div class="container mb-4" th:if="${filter != null}">
+                    <form th:action="@{/restaurants/{id}/filter/current(id=${response.data.id})}" method="post" th:object="${filter}">
+                        <div class="d-flex column-gap-4 justify-content-center align-items-center flex-wrap">
+                            <div>
+                                <label for="filterNom" class="me-1">Nom</label>
+                                <input type="text" th:field="*{collaborateurNom}" id="filterNom">
+                            </div>
+                            <div>
+                                <label for="filterPrenom" class="me-1">Prénom</label>
+                                <input type="text" th:field="*{collaborateurPrenom}" id="filterPrenom">
+                            </div>
+                            <div>
+                                <label for="filterDateDebutAffectation" class="me-1">Date du début d'affectation</label>
+                                <input type="date" th:field="*{affectationDateDebut}" id="filterDateDebutAffectation">
+                            </div>
+                            <div>
+                                <label for="filterfonction" class="me-1">Fonction</label>
+                                <input type="text" th:field="*{fonction}" id="filterfonction">
+                            </div>
+                            <button type="submit" class="btn btn-primary">filtrer</button>
+                        </div>
+                    </form>
+                </div>
                 <table class="table table-bordered">
                     <thead>
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Nom</th>
                         <th scope="col">Prénom</th>
-                        <th scope="col">Date d'embauche</th>
+                        <th scope="col">Date de début</th>
+                        <th scope="col">fonction</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="col : ${currentCollabs}" th:onclick="|window.location.href='/collaborateurs/' + ${col.id}|" style="cursor:pointer;">
-                        <td th:text="${col?.id}"></td>
-                        <td th:text="${col?.nom}"></td>
-                        <td th:text="${col?.prenom}"></td>
-                        <td th:text="${col?.dateEmbauche}"></td>
+                    <tr th:each="col : ${currentCollabs}" th:onclick="|window.location.href='/collaborateurs/' + ${col.collabId}|" style="cursor:pointer;">
+                        <td th:text="${col?.collabId}"></td>
+                        <td th:text="${col?.collabNom}"></td>
+                        <td th:text="${col?.collabPrenom}"></td>
+                        <td th:text="${col?.affectationDateDebut}"></td>
+                        <td th:text="${col?.fonction}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="container" th:if="${historyCollabs != null}">
+                <h3 class="text-center my-4">Historique des collaborateurs</h3>
+                <div class="container mb-4" th:if="${filter != null}">
+                    <form th:action="@{/restaurants/{id}/filter/history(id=${response.data.id})}" method="post" th:object="${filter}">
+                        <div class="d-flex column-gap-4 justify-content-center align-items-center flex-wrap">
+                            <div>
+                                <label for="filterNomHistory" class="me-1">Nom</label>
+                                <input type="text" th:field="*{collaborateurNom}" id="filterNomHistory">
+                            </div>
+                            <div>
+                                <label for="filterPrenomHistory" class="me-1">Prénom</label>
+                                <input type="text" th:field="*{collaborateurPrenom}" id="filterPrenomHistory">
+                            </div>
+                            <div>
+                                <label for="filterDateDebutAffectationHistory" class="me-1">Date du début d'affectation</label>
+                                <input type="date" th:field="*{affectationDateDebut}" id="filterDateDebutAffectationHistory">
+                            </div>
+                            <div>
+                                <label for="filterfonctionHistory" class="me-1">Fonction</label>
+                                <input type="text" th:field="*{fonction}" id="filterfonctionHistory">
+                            </div>
+                            <button type="submit" class="btn btn-primary">filtrer</button>
+                        </div>
+                    </form>
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Prénom</th>
+                        <th scope="col">Date de début</th>
+                        <th scope="col">Date de fin</th>
+                        <th scope="col">fonction</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="col : ${historyCollabs}" th:onclick="|window.location.href='/collaborateurs/' + ${col.collabId}|" style="cursor:pointer;">
+                        <td th:text="${col?.collabId}"></td>
+                        <td th:text="${col?.collabNom}"></td>
+                        <td th:text="${col?.collabPrenom}"></td>
+                        <td th:text="${col?.affectationDateDebut}"></td>
+                        <td th:text="${col?.affectationDateFin}"></td>
+                        <td th:text="${col?.fonction}"></td>
                     </tr>
                     </tbody>
                 </table>

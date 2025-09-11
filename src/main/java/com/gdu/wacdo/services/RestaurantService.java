@@ -1,9 +1,6 @@
 package com.gdu.wacdo.services;
 
-import com.gdu.wacdo.DTO.CollabDTO;
-import com.gdu.wacdo.DTO.RestaurantDTO;
-import com.gdu.wacdo.DTO.NewRestaurantDTO;
-import com.gdu.wacdo.entities.Collaborateur;
+import com.gdu.wacdo.DTO.*;
 import com.gdu.wacdo.entities.Restaurant;
 import com.gdu.wacdo.repositories.AffectationRepository;
 import com.gdu.wacdo.repositories.RestaurantRepository;
@@ -123,13 +120,12 @@ public class RestaurantService {
         return restaurantsDTO;
     }
 
-    public List<CollabDTO> findCurrentCollabs(long restaurantId) {
-        List<Collaborateur> collabs = affectationRepository.findCurrentEmployeesByRestaurant(restaurantId);
-        List<CollabDTO> collabsDTO = new ArrayList<>();
-        for (Collaborateur collab : collabs) {
-            collabsDTO.add(modelMapper.map(collab, CollabDTO.class));
-        }
-        return collabsDTO;
+    public List<RestaurantCollaborateurDTO> findCurrentCollabsFiltered(Long restaurantId, CollaborateurAffectationFilterDTO filter) {
+        return affectationRepository.findCurrentEmployeesByRestaurantFiltered(restaurantId, filter.getCollaborateurNom(), filter.getCollaborateurPrenom(), filter.getAffectationDateDebut(), filter.getFonction());
+    }
+
+    public List<RestaurantCollaborateurDTO> findHistoryCollabsFiltered(Long restaurantId, CollaborateurAffectationFilterDTO filter) {
+        return affectationRepository.findHistoryEmployeesByRestaurantFiltered(restaurantId, filter.getCollaborateurNom(), filter.getCollaborateurPrenom(), filter.getAffectationDateDebut(), filter.getFonction());
     }
 
     public List<RestaurantDTO> findAllForViewFiltered(RestaurantDTO filterRestaurant) {

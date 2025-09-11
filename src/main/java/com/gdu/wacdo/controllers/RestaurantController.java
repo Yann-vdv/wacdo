@@ -1,8 +1,6 @@
 package com.gdu.wacdo.controllers;
 
-import com.gdu.wacdo.DTO.CollabDTO;
-import com.gdu.wacdo.DTO.RestaurantDTO;
-import com.gdu.wacdo.DTO.NewRestaurantDTO;
+import com.gdu.wacdo.DTO.*;
 import com.gdu.wacdo.entities.ApiResponse;
 import com.gdu.wacdo.entities.Restaurant;
 import com.gdu.wacdo.entities.Status;
@@ -12,6 +10,7 @@ import com.gdu.wacdo.services.RestaurantService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,13 +66,39 @@ public class RestaurantController {
     @GetMapping("/{id}")
     public String restaurantById(Model model, @PathVariable Long id) {
         RestaurantDTO restaurant = restaurantService.findById(id);
-        List<CollabDTO> currentCollabs = restaurantService.findCurrentCollabs(id);
+        CollaborateurAffectationFilterDTO emptyFilter = new CollaborateurAffectationFilterDTO();
+        List<RestaurantCollaborateurDTO> currentCollabs = restaurantService.findCurrentCollabsFiltered(id, emptyFilter);
+        List<RestaurantCollaborateurDTO> historyCollabs = restaurantService.findHistoryCollabsFiltered(id, emptyFilter);
 
         if (restaurant != null) {
             ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.SUCCESS,restaurant,true,"Restaurant récupéré avec succès");
             model.addAttribute("response", response);
             model.addAttribute("restaurant", response.getData());
+            model.addAttribute("filter", emptyFilter);
             model.addAttribute("currentCollabs", currentCollabs);
+            model.addAttribute("historyCollabs", historyCollabs);
+            return "restaurant";
+        } else {
+            ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération du restaurant a échouée");
+            model.addAttribute("response", response);
+            return "restaurants";
+        }
+    }
+
+    @PostMapping("/{id}/filter/{status}")
+    public String restaurantByIdFiltered(CollaborateurAffectationFilterDTO filter, Model model, @PathVariable Long id, @PathVariable String status) {
+        RestaurantDTO restaurant = restaurantService.findById(id);
+        CollaborateurAffectationFilterDTO emptyFilter = new CollaborateurAffectationFilterDTO();
+        List<RestaurantCollaborateurDTO> currentCollabs = restaurantService.findCurrentCollabsFiltered(id, (filter != null && Objects.equals(status, "current")) ? filter : emptyFilter);
+        List<RestaurantCollaborateurDTO> historyCollabs = restaurantService.findHistoryCollabsFiltered(id, (filter != null && Objects.equals(status, "history")) ? filter : emptyFilter);
+
+        if (restaurant != null) {
+            ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.SUCCESS,restaurant,true,"Restaurant récupéré avec succès");
+            model.addAttribute("response", response);
+            model.addAttribute("restaurant", response.getData());
+            model.addAttribute("filter", emptyFilter);
+            model.addAttribute("currentCollabs", currentCollabs);
+            model.addAttribute("historyCollabs", historyCollabs);
             return "restaurant";
         } else {
             ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération du restaurant a échouée");
@@ -86,7 +111,6 @@ public class RestaurantController {
     public String newRestaurant(NewRestaurantDTO newRestaurantDTO, Model model) {
         RestaurantDTO restaurant = restaurantService.create(newRestaurantDTO);
         if (restaurant != null) {
-            //model.addAttribute("restaurant", restaurant);
             ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.SUCCESS,restaurant,true,"Restaurant créé avec succès");
             model.addAttribute("response", response);
             return "restaurant";

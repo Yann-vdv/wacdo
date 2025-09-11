@@ -62,7 +62,7 @@
                 </form>
             </div>
 
-            <div class="container" th:if="${collaborateurAff != null and collaborateurAff.getCurrentAffectations != null and !collaborateurAff.getCurrentAffectations.empty}">
+            <div class="container" th:if="${collabCurrentAff != null and !collabCurrentAff.empty}">
                 <h3 class="text-center my-4">Affectation en cours</h3>
                 <table class="table table-bordered">
                     <thead>
@@ -75,7 +75,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="affectation : ${collaborateurAff.getCurrentAffectations}" th:onclick="|window.location.href='/affectations/' + ${affectation.id}|" style="cursor:pointer;">
+                    <tr th:each="affectation : ${collabCurrentAff}" th:onclick="|window.location.href='/affectations/' + ${affectation.id}|" style="cursor:pointer;">
                         <td th:text="${affectation.id}"></td>
                         <td th:text="${affectation.dateDebut}"></td>
                         <td th:text="${affectation.restaurant.nom}"></td>
@@ -86,8 +86,31 @@
                 </table>
             </div>
 
-            <div class="container" th:if="${collaborateurAff != null and collaborateurAff.getHistory != null}">
+            <div class="container" th:if="${collabHistoryAff != null}">
                 <h3 class="text-center my-4">Historique des affectations</h3>
+                <div class="container mb-4" th:if="${filter != null}">
+                    <form th:action="@{/collaborateurs/{id}/filter(id=${response.data.id})}" method="post" th:object="${filter}">
+                        <div class="d-flex column-gap-4 justify-content-center align-items-center flex-wrap">
+                            <div>
+                                <label for="filterNom" class="me-1">Nom</label>
+                                <input type="text" th:field="*{collaborateurNom}" id="filterNom">
+                            </div>
+                            <div>
+                                <label for="filterPrenom" class="me-1">Prénom</label>
+                                <input type="text" th:field="*{collaborateurPrenom}" id="filterPrenom">
+                            </div>
+                            <div>
+                                <label for="filterDateDebutAffectation" class="me-1">Date du début d'affectation</label>
+                                <input type="date" th:field="*{affectationDateDebut}" id="filterDateDebutAffectation">
+                            </div>
+                            <div>
+                                <label for="filterfonction" class="me-1">Fonction</label>
+                                <input type="text" th:field="*{fonction}" id="filterfonction">
+                            </div>
+                            <button type="submit" class="btn btn-primary">filtrer</button>
+                        </div>
+                    </form>
+                </div>
                 <table class="table table-bordered">
                     <thead>
                     <tr>
@@ -100,7 +123,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="affectation : ${collaborateurAff.getHistory}" th:onclick="|window.location.href='/affectations/' + ${affectation.id}|" style="cursor:pointer;">
+                    <tr th:each="affectation : ${collabHistoryAff}" th:onclick="|window.location.href='/affectations/' + ${affectation.id}|" style="cursor:pointer;">
                         <td th:text="${affectation.id}"></td>
                         <td th:text="${affectation.dateDebut}"></td>
                         <td th:text="${affectation.dateFin}"></td>

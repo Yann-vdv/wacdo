@@ -13,7 +13,6 @@
 
             <div class="container mb-4" th:if="${filterCollaborateur != null}">
                 <form th:action="@{/collaborateurs/filtered}" method="post" th:object="${filterCollaborateur}">
-                    <h3 class="text-center mb-4">filtrer</h3>
                     <div class="d-flex column-gap-4 justify-content-center align-items-center flex-wrap">
                         <div>
                             <label for="filterNom" class="me-1">Nom</label>

@@ -1,9 +1,6 @@
 package com.gdu.wacdo.services;
 
-import com.gdu.wacdo.DTO.AffectationDTO;
-import com.gdu.wacdo.DTO.CollaborateurAffectationsDTO;
-import com.gdu.wacdo.DTO.NewCollabDTO;
-import com.gdu.wacdo.DTO.CollabDTO;
+import com.gdu.wacdo.DTO.*;
 import com.gdu.wacdo.entities.Affectation;
 import com.gdu.wacdo.entities.ApiResponse;
 import com.gdu.wacdo.entities.Collaborateur;
@@ -133,18 +130,21 @@ public class CollaborateurService {
         return collabsDTO;
     }
 
-    public CollaborateurAffectationsDTO findAffectations(long collaborateurId) {
-        List<Affectation> affectations = affectationRepository.findByCollaborateurIdOrdered(collaborateurId);
-        List<AffectationDTO> current = new ArrayList<>();
-        List<AffectationDTO> history = new ArrayList<>();
+    public List<AffectationDTO> findCurrentAffectationsForView(Long collaborateurId){
+        List<Affectation> affectations = affectationRepository.findCurrentByCollaborateur(collaborateurId);
+        List<AffectationDTO> affectationsDTO = new ArrayList<>();
         for (Affectation affectation : affectations) {
-            AffectationDTO dto = modelMapper.map(affectation, AffectationDTO.class);
-            if (affectation.getDateFin() == null) {
-                current.add(dto);
-            } else {
-                history.add(dto);
-            }
+            affectationsDTO.add(modelMapper.map(affectation, AffectationDTO.class));
         }
-        return new CollaborateurAffectationsDTO(current, history);
+        return affectationsDTO;
+    }
+
+    public List<AffectationDTO> findHistoryAffectationsForViewFiltred(Long collaborateurId, CollaborateurAffectationFilterDTO filter){
+        List<Affectation> affectations = affectationRepository.findHistoryByCollaborateurFiltered(collaborateurId, filter.getCollaborateurNom(), filter.getCollaborateurPrenom(), filter.getAffectationDateDebut(), filter.getFonction());
+        List<AffectationDTO> affectationsDTO = new ArrayList<>();
+        for (Affectation affectation : affectations) {
+            affectationsDTO.add(modelMapper.map(affectation, AffectationDTO.class));
+        }
+        return affectationsDTO;
     }
 }
