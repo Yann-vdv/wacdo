@@ -2,6 +2,7 @@ package com.gdu.wacdo.entities;
 
 import jakarta.persistence.*;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,7 +22,7 @@ public class Collaborateur {
     private String nom;
     private String prenom;
 
-    private Date dateEmbauche;
+    private LocalDate dateEmbauche;
     
     private boolean administrateur;
     private String passWord;

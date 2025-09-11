@@ -42,7 +42,7 @@
 
             <div class="container mb-5">
                 <h2 class="text-center my-4">Nouvelle Fonction</h2>
-                <form th:action="@{/fonctions/newfonction}" method="post" th:object="${fonction}" class="d-flex flex-column row-gap-2">
+                <form th:action="@{/fonctions/new}" method="post" th:object="${fonction}" class="d-flex flex-column row-gap-2">
                     <div>
                         <label for="nom" class="me-1">Nom</label>
                         <input type="text" th:field="*{nom}" id="nom">

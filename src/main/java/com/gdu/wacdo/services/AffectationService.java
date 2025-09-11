@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +37,15 @@ public class AffectationService {
 
     public AffectationDTO create(NewAffectationDTO newAffectationDTO) {
         try {
+            //fin des affectations en cours
+            List<Affectation> currentAffectations = affectationRepository.findByCollaborateurId(newAffectationDTO.getCollaborateur());
+            for (Affectation affectation : currentAffectations) {
+                if(affectation.getDateFin() == null) {
+                    affectation.setDateFin(LocalDate.now());
+                    affectationRepository.save(affectation);
+                }
+            }
+            //nouvelle affectation
             Affectation newAffectation = new Affectation();
             newAffectation.setDateDebut(newAffectationDTO.getDateDebut());
             newAffectation.setDateFin(newAffectationDTO.getDateFin());
@@ -57,7 +67,6 @@ public class AffectationService {
     }
 
     public AffectationDTO edit(long id, EditAffectationDTO editAffectationDTO) {
-        log.info("service, edit affectation : {}",editAffectationDTO);
         try {
             Optional<Affectation> updated = affectationRepository.findById(id)
                 .map(existing -> {

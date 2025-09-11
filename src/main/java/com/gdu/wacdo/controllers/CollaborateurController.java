@@ -35,7 +35,7 @@ public class CollaborateurController {
         if (collabsDTO != null) {
             ApiResponse<List<CollabDTO>> response = new ApiResponse<>(Status.SUCCESS,collabsDTO,true,"Collaborateurs récupérés avec succès");
             model.addAttribute("response", response);
-            model.addAttribute("filterCollab",new CollabDTO());
+            model.addAttribute("filterCollaborateur",new CollabDTO());
         } else {
             ApiResponse<List<CollabDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des collaborateurs a échouée");
             model.addAttribute("response", response);
@@ -50,7 +50,7 @@ public class CollaborateurController {
         if (collabsDTO != null) {
             ApiResponse<List<CollabDTO>> response = new ApiResponse<>(Status.SUCCESS,collabsDTO,true,"Collaborateurs(filtrés) récupérés avec succès");
             model.addAttribute("response", response);
-            model.addAttribute("filterCollab",new CollabDTO());
+            model.addAttribute("filterCollaborateur",new CollabDTO());
         } else {
             ApiResponse<List<CollabDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des collaborateurs(filtrés) a échouée");
             model.addAttribute("response", response);

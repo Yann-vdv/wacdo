@@ -60,7 +60,7 @@
 
             <div class="container mb-5">
                 <h3 class="text-center my-4">Nouveau Retaurant</h3>
-                <form th:action="@{/restaurants/newRestaurant}" method="post" th:object="${restaurant}" class="d-flex flex-column row-gap-2">
+                <form th:action="@{/restaurants/new}" method="post" th:object="${restaurant}" class="d-flex flex-column row-gap-2">
                     <div>
                         <label for="nom" class="me-1">Nom</label>
                         <input type="text" th:field="*{nom}" id="nom">

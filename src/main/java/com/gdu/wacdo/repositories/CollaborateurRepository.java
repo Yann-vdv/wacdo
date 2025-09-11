@@ -1,9 +1,8 @@
 package com.gdu.wacdo.repositories;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
-import com.gdu.wacdo.entities.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.gdu.wacdo.entities.Collaborateur;
@@ -22,5 +21,5 @@ public interface CollaborateurRepository extends JpaRepository<Collaborateur, Lo
             "AND (:dateEmbauche IS NULL OR c.dateEmbauche = :dateEmbauche)")
     List<Collaborateur> findAllFiltered(@Param("nom") String nom,
                                      @Param("prenom") String prenom,
-                                     @Param("dateEmbauche") Date dateEmbauche);
+                                     @Param("dateEmbauche") LocalDate dateEmbauche);
 }

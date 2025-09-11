@@ -39,7 +39,7 @@ public class FonctionController {
         if (fonctionsDTO != null) {
             ApiResponse<List<FonctionDTO>> response = new ApiResponse<>(Status.SUCCESS,fonctionsDTO,true,"les fonctions ont été récupérés avec succès");
             model.addAttribute("response", response);
-            model.addAttribute("filterfonction",new FonctionDTO());
+            model.addAttribute("filterFonction",new FonctionDTO());
         } else {
             ApiResponse<List<FonctionDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des fonctions a échouée");
             model.addAttribute("response", response);
@@ -54,7 +54,7 @@ public class FonctionController {
         if (fonctionsDTO != null) {
             ApiResponse<List<FonctionDTO>> response = new ApiResponse<>(Status.SUCCESS,fonctionsDTO,true,"les fonctions(filtrés) ont été récupérés avec succès");
             model.addAttribute("response", response);
-            model.addAttribute("filterfonction",new FonctionDTO());
+            model.addAttribute("filterFonction",new FonctionDTO());
         } else {
             ApiResponse<List<FonctionDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des fonctions(filtrés) a échouée");
             model.addAttribute("response", response);
