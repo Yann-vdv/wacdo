@@ -108,7 +108,15 @@ public class FonctionService {
         for (Fonction fonction : fonctions) {
             fonctionsDTO.add(modelMapper.map(fonction, FonctionDTO.class));
         }
-        //log.info("list Fonctions : {}", fonctionsDTO);
+        return fonctionsDTO;
+    }
+
+    public List<FonctionDTO> findAllForViewFiltered(FonctionDTO filterFonction) {
+        List<Fonction> fonctions = fonctionRepository.findAllFiltered(filterFonction.getNom());
+        List<FonctionDTO> fonctionsDTO = new ArrayList<>();
+        for (Fonction fonction : fonctions) {
+            fonctionsDTO.add(modelMapper.map(fonction, FonctionDTO.class));
+        }
         return fonctionsDTO;
     }
 }

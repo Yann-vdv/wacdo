@@ -11,6 +11,27 @@
                 <h1 class="text-center my-4">COLLABORATEURS</h1>
             </div>
 
+            <div class="container mb-4" th:if="${filterCollaborateur != null}">
+                <form th:action="@{/collaborateurs/filtered}" method="post" th:object="${filterCollaborateur}">
+                    <h3 class="text-center mb-4">filtrer</h3>
+                    <div class="d-flex column-gap-4 justify-content-center align-items-center flex-wrap">
+                        <div>
+                            <label for="filterNom" class="me-1">Nom</label>
+                            <input type="text" th:field="*{nom}" id="filterNom">
+                        </div>
+                        <div>
+                            <label for="filterPrenom" class="me-1">Prénom</label>
+                            <input type="text" th:field="*{prenom}" id="filterPrenom">
+                        </div>
+                        <div>
+                            <label for="filterDateEmbauche" class="me-1">Date d'embauche</label>
+                            <input type="date" th:field="*{dateEmbauche}" id="filterDateEmbauche">
+                        </div>
+                        <button type="submit" class="btn btn-primary">filtrer</button>
+                    </div>
+                </form>
+            </div>
+
             <div class="container">
                 <table class="table table-bordered">
                     <thead>

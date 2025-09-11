@@ -121,12 +121,20 @@ public class CollaborateurService {
         for (Collaborateur collaborateur : collabs) {
             collabsDTO.add(modelMapper.map(collaborateur, CollabDTO.class));
         }
-        //log.info("list Collabs : {}", collabsDTO);
+        return collabsDTO;
+    }
+
+    public List<CollabDTO> findAllForViewFiltered(CollabDTO filterCollab) {
+        List<Collaborateur> collabs = collaborateurRepository.findAllFiltered(filterCollab.getNom(), filterCollab.getPrenom(),filterCollab.getDateEmbauche());
+        List<CollabDTO> collabsDTO = new ArrayList<>();
+        for (Collaborateur collaborateur : collabs) {
+            collabsDTO.add(modelMapper.map(collaborateur, CollabDTO.class));
+        }
         return collabsDTO;
     }
 
     public CollaborateurAffectationsDTO findAffectations(long collaborateurId) {
-        List<Affectation> affectations = affectationRepository.findByCollaborateurId(collaborateurId);
+        List<Affectation> affectations = affectationRepository.findByCollaborateurIdOrdered(collaborateurId);
         List<AffectationDTO> current = new ArrayList<>();
         List<AffectationDTO> history = new ArrayList<>();
         for (Affectation affectation : affectations) {

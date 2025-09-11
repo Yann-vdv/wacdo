@@ -7,8 +7,33 @@
         <div th:replace="~{layout :: notification(${response})}"></div>
 
         <main class="flex-grow-1">
-            <div class="container py-3">
+            <div class="container pt-3">
                 <h1 class="text-center my-4">RESTAURANTS</h1>
+            </div>
+
+            <div class="container mb-4" th:if="${filterRestaurant != null}">
+                <form th:action="@{/restaurants/filtered}" method="post" th:object="${filterRestaurant}">
+                    <h3 class="text-center mb-4">filtrer</h3>
+                    <div class="d-flex column-gap-4 justify-content-center align-items-center flex-wrap">
+                        <div>
+                            <label for="filterNom" class="me-1">Nom</label>
+                            <input type="text" th:field="*{nom}" id="filterNom">
+                        </div>
+                        <div>
+                            <label for="filterAdresse" class="me-1">Adresse</label>
+                            <input type="text" th:field="*{adresse}" id="filterAdresse">
+                        </div>
+                        <div>
+                            <label for="filterCodePostal" class="me-1">Code postal</label>
+                            <input type="text" th:field="*{codePostal}" id="filterCodePostal">
+                        </div>
+                        <div>
+                            <label for="filterVille" class="me-1">Ville</label>
+                            <input type="text" th:field="*{ville}" id="filterVille">
+                        </div>
+                        <button type="submit" class="btn btn-primary">filtrer</button>
+                    </div>
+                </form>
             </div>
 
             <div class="container">
@@ -54,7 +79,7 @@
                         <input type="text" th:field="*{ville}" id="ville">
                     </div>
                     <div>
-                        <button type="submit">Valider</button>
+                        <button type="submit" class="btn btn-success">Valider</button>
                     </div>
                 </form>
             </div>

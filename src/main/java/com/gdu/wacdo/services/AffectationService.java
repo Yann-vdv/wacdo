@@ -125,7 +125,15 @@ public class AffectationService {
         for (Affectation affectation : affectations) {
             affectationsDTO.add(modelMapper.map(affectation, AffectationDTO.class));
         }
-        log.info("list Affectations : {}", affectationsDTO);
+        return affectationsDTO;
+    }
+
+    public List<AffectationDTO> findAllForViewFiltered(NewAffectationDTO filterAffectation) {
+        List<Affectation> affectations = affectationRepository.findAllFiltered(filterAffectation.getDateDebut(),filterAffectation.getDateFin(),filterAffectation.getRestaurant(),filterAffectation.getCollaborateur(),filterAffectation.getFonction());
+        List<AffectationDTO> affectationsDTO = new ArrayList<>();
+        for (Affectation affectation : affectations) {
+            affectationsDTO.add(modelMapper.map(affectation, AffectationDTO.class));
+        }
         return affectationsDTO;
     }
 

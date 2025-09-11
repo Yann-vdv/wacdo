@@ -40,8 +40,24 @@ public class RestaurantController {
         if (restaurantsDTO != null) {
             ApiResponse<List<RestaurantDTO>> response = new ApiResponse<>(Status.SUCCESS,restaurantsDTO,true,"Restaurants récupérés avec succès");
             model.addAttribute("response", response);
+            model.addAttribute("filterRestaurant",new RestaurantDTO());
         } else {
             ApiResponse<List<RestaurantDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des restaurants a échouée");
+            model.addAttribute("response", response);
+        }
+        model.addAttribute("restaurant", new Restaurant());
+        return "restaurants";
+    }
+
+    @PostMapping("/filtered")
+    public String restaurantsFiltered(RestaurantDTO filteredRestaurant,Model model){
+        List<RestaurantDTO> restaurantsDTO = restaurantService.findAllForViewFiltered(filteredRestaurant);
+        if (restaurantsDTO != null) {
+            ApiResponse<List<RestaurantDTO>> response = new ApiResponse<>(Status.SUCCESS,restaurantsDTO,true,"Restaurants(filtrés) récupérés avec succès");
+            model.addAttribute("response", response);
+            model.addAttribute("filterRestaurant",new RestaurantDTO());
+        } else {
+            ApiResponse<List<RestaurantDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des restaurants(filtrés) a échouée");
             model.addAttribute("response", response);
         }
         model.addAttribute("restaurant", new Restaurant());

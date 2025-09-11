@@ -37,12 +37,26 @@ public class FonctionController {
     public String fonctions(Model model){
         List<FonctionDTO> fonctionsDTO = fonctionService.findAllForView();
         if (fonctionsDTO != null) {
-            //model.addAttribute("fonctions", fonctionsDTO);
             ApiResponse<List<FonctionDTO>> response = new ApiResponse<>(Status.SUCCESS,fonctionsDTO,true,"les fonctions ont été récupérés avec succès");
-            log.info("Response {}", response);
             model.addAttribute("response", response);
+            model.addAttribute("filterfonction",new FonctionDTO());
         } else {
             ApiResponse<List<FonctionDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des fonctions a échouée");
+            model.addAttribute("response", response);
+        }
+        model.addAttribute("fonction", new Fonction());
+        return "fonctions";
+    }
+
+    @PostMapping("/filtered")
+    public String fonctionsFiltered(FonctionDTO filteredFonction,Model model){
+        List<FonctionDTO> fonctionsDTO = fonctionService.findAllForViewFiltered(filteredFonction);
+        if (fonctionsDTO != null) {
+            ApiResponse<List<FonctionDTO>> response = new ApiResponse<>(Status.SUCCESS,fonctionsDTO,true,"les fonctions(filtrés) ont été récupérés avec succès");
+            model.addAttribute("response", response);
+            model.addAttribute("filterfonction",new FonctionDTO());
+        } else {
+            ApiResponse<List<FonctionDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des fonctions(filtrés) a échouée");
             model.addAttribute("response", response);
         }
         model.addAttribute("fonction", new Fonction());

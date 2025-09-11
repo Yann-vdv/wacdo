@@ -11,6 +11,44 @@
                 <h1 class="text-center my-4">AFFECTATIONS</h1>
             </div>
 
+            <div class="container mb-4" th:if="${processData != null and filterAffectation != null}">
+                <form th:action="@{/affectations/filtered}" method="post" th:object="${filterAffectation}">
+                    <h3 class="text-center mb-4">filtrer</h3>
+                    <div class="d-flex column-gap-4 justify-content-center align-items-center flex-wrap">
+                        <div>
+                            <label for="filterDateDebut" class="me-1">Date de Debut</label>
+                            <input type="date" th:field="*{dateDebut}" id="filterDateDebut">
+                        </div>
+                        <div>
+                            <label for="filterDateFin" class="me-1">Date de Fin</label>
+                            <input type="date" th:field="*{dateFin}" id="filterDateFin">
+                        </div>
+                        <div>
+                            <label for="filterRestaurant" class="me-1">Restaurant</label>
+                            <select id="filterRestaurant" th:field="*{restaurant}">
+                                <option value=""></option>
+                                <option th:each="restaurant : ${processData.restaurants}" th:value="${restaurant.id}" th:text="${restaurant.nom}"></option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="filterCollaborateur" class="me-1">Collaborateur</label>
+                            <select id="filterCollaborateur" th:field="*{collaborateur}">
+                                <option value=""></option>
+                                <option th:each="collab : ${processData.collabs}" th:value="${collab.id}" th:text="${collab.prenom + ' ' + collab.nom}"></option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="filterFonction" class="me-1">Fonction</label>
+                            <select id="filterFonction" th:field="*{fonction}">
+                                <option value=""></option>
+                                <option th:each="fonction : ${processData.fonctions}" th:value="${fonction.id}" th:text="${fonction.nom}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">filtrer</button>
+                    </div>
+                </form>
+            </div>
+
             <div class="container">
                 <table class="table table-bordered">
                     <thead>
@@ -36,7 +74,7 @@
                 </table>
             </div>
 
-            <div class="container mb-5" th:if="${processData}">
+            <div class="container mb-5" th:if="${processData != null}">
                 <h3 class="text-center my-4">Nouvelle affectation</h3>
                 <form th:action="@{/affectations/new}" method="post" th:object="${affectation}" class="d-flex flex-column row-gap-2">
                     <div>

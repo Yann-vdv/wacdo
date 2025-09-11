@@ -36,10 +36,25 @@ public class CollaborateurController {
         List<CollabDTO> collabsDTO = collaborateurService.findAllForView();
         if (collabsDTO != null) {
             ApiResponse<List<CollabDTO>> response = new ApiResponse<>(Status.SUCCESS,collabsDTO,true,"Collaborateurs récupérés avec succès");
-            log.info("Response {}", response);
             model.addAttribute("response", response);
+            model.addAttribute("filterCollab",new CollabDTO());
         } else {
             ApiResponse<List<CollabDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des collaborateurs a échouée");
+            model.addAttribute("response", response);
+        }
+        model.addAttribute("collaborateur", new Collaborateur());
+        return "collaborateurs";
+    }
+
+    @PostMapping("/filtered")
+    public String collaborateursFiltered(CollabDTO filteredCollab,Model model){
+        List<CollabDTO> collabsDTO = collaborateurService.findAllForViewFiltered(filteredCollab);
+        if (collabsDTO != null) {
+            ApiResponse<List<CollabDTO>> response = new ApiResponse<>(Status.SUCCESS,collabsDTO,true,"Collaborateurs(filtrés) récupérés avec succès");
+            model.addAttribute("response", response);
+            model.addAttribute("filterCollab",new CollabDTO());
+        } else {
+            ApiResponse<List<CollabDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des collaborateurs(filtrés) a échouée");
             model.addAttribute("response", response);
         }
         model.addAttribute("collaborateur", new Collaborateur());

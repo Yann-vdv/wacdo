@@ -42,11 +42,31 @@ public class AffectationController {
             if (!processData.getFonctions().isEmpty() && !processData.getRestaurants().isEmpty() && !processData.getCollabs().isEmpty()) {
                 model.addAttribute("processData", processData);
                 model.addAttribute("affectation", new Affectation());
+                model.addAttribute("filterAffectation", new NewAffectationDTO());
             }
             ApiResponse<List<AffectationDTO>> response = new ApiResponse<>(Status.SUCCESS,affectationsDTO,true,"Affectations récupérés avec succès");
             model.addAttribute("response", response);
         } else {
             ApiResponse<List<AffectationDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des affectations a échouée");
+            model.addAttribute("response", response);
+        }
+        return "affectations";
+    }
+
+    @PostMapping("/filtered")
+    public String affectationsFiltered(NewAffectationDTO filteredAffectation,Model model){
+        List<AffectationDTO> affectationsDTO = affectationService.findAllForViewFiltered(filteredAffectation);
+        if (affectationsDTO != null) {
+            DataDTO processData = affectationService.getProcessData();
+            if (!processData.getFonctions().isEmpty() && !processData.getRestaurants().isEmpty() && !processData.getCollabs().isEmpty()) {
+                model.addAttribute("processData", processData);
+                model.addAttribute("affectation", new Affectation());
+                model.addAttribute("filterAffectation", new NewAffectationDTO());
+            }
+            ApiResponse<List<AffectationDTO>> response = new ApiResponse<>(Status.SUCCESS,affectationsDTO,true,"Affectations(filtrés) récupérés avec succès");
+            model.addAttribute("response", response);
+        } else {
+            ApiResponse<List<AffectationDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des affectations(filtrés) a échouée");
             model.addAttribute("response", response);
         }
         return "affectations";
