@@ -39,24 +39,27 @@
             </nav>
         </header>
 
-        <div th:fragment="notification (response)">
-            <div th:if="response.notification">
-                <div class="align-items-center alert position-fixed top-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true"  data-bs-delay="5000"
-                     th:classappend="${response.getAlertClass}">
-                    <div class="d-flex">
-                        <div th:text="${response.message}" class="toast-body"></div>
-                        <button type="button" class="btn-close mx-2 m-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+        <div th:fragment="notification (response)" th:if="${response.notification}">
+            <div class="align-items-center alert position-fixed top-0 end-0 m-3" role="alert"
+                 aria-live="assertive" aria-atomic="true"
+                 data-bs-animation="true" data-bs-autohide="true"  data-bs-delay="5000"
+                 th:classappend="${response.getAlertClass}">
+                <div class="d-flex">
+                    <div th:text="${response.message}" class="toast-body"></div>
+                    <button type="button" class="btn-close mx-2 m-auto" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </div>
             <script th:inline="javascript">
-                document.addEventListener("DOMContentLoaded", function () {
-                    const toastEl = document.querySelector('.alert');
-                    if (toastEl) {
-                        const toast = new bootstrap.Toast(toastEl);
-                        toast.show();
-                    }
-                });
+                //console.log("test",[[${response}]]);
+                if([[${response.notification}]]) {
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const toastEl = document.querySelector('.alert');
+                        if (toastEl) {
+                            const toast = new bootstrap.Toast(toastEl);
+                            toast.show();
+                        }
+                    });
+                };
             </script>
         </div>
 

@@ -11,6 +11,7 @@ import com.gdu.wacdo.repositories.AffectationRepository;
 import com.gdu.wacdo.services.AffectationService;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -67,6 +68,36 @@ public class AffectationController {
             model.addAttribute("response", response);
         } else {
             ApiResponse<List<AffectationDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des affectations(filtrés) a échouée");
+            model.addAttribute("response", response);
+        }
+        return "affectations";
+    }
+
+    @GetMapping("/restaurant/{id}")
+    public String newAffectationByRestaurant(Model model, @PathVariable Long id){
+        DataDTO processData = affectationService.getProcessData();
+        if (!processData.getFonctions().isEmpty() && !processData.getRestaurants().isEmpty() && !processData.getCollabs().isEmpty()) {
+            model.addAttribute("processData", processData);
+            model.addAttribute("affectation", new NewAffectationDTO(LocalDate.now(),null,id,null,null));
+            ApiResponse<List<AffectationDTO>> response = new ApiResponse<>(Status.SUCCESS,null,false,"Données récupérés avec succès");
+            model.addAttribute("response", response);
+        } else {
+            ApiResponse<List<AffectationDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des données a échouée");
+            model.addAttribute("response", response);
+        }
+        return "affectations";
+    }
+
+    @GetMapping("/collaborateur/{id}")
+    public String newAffectationByCollaborateur(Model model, @PathVariable Long id){
+        DataDTO processData = affectationService.getProcessData();
+        if (!processData.getFonctions().isEmpty() && !processData.getRestaurants().isEmpty() && !processData.getCollabs().isEmpty()) {
+            model.addAttribute("processData", processData);
+            model.addAttribute("affectation", new NewAffectationDTO(LocalDate.now(),null,null,id,null));
+            ApiResponse<List<AffectationDTO>> response = new ApiResponse<>(Status.SUCCESS,null,false,"Données récupérés avec succès");
+            model.addAttribute("response", response);
+        } else {
+            ApiResponse<List<AffectationDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des données a échouée");
             model.addAttribute("response", response);
         }
         return "affectations";

@@ -7,7 +7,7 @@
         <div th:replace="~{layout :: notification(${response})}"></div>
 
         <main class="flex-grow-1">
-            <div class="container py-3">
+            <div class="container py-3" th:if="${response.data != null}">
                 <h1 class="text-center my-4">AFFECTATIONS</h1>
             </div>
 
@@ -48,7 +48,7 @@
                 </form>
             </div>
 
-            <div class="container">
+            <div class="container" th:if="${response.data != null}">
                 <table class="table table-bordered">
                     <thead>
                     <tr>

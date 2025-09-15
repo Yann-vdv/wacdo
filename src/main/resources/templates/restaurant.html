@@ -67,7 +67,15 @@
             </div>
 
             <div class="container" th:if="${currentCollabs != null}">
-                <h3 class="text-center my-4">Collaborateurs en poste</h3>
+                <div class="d-flex column-gap-2 justify-content-evenly align-items-center">
+                    <div style="width:199px"></div>
+                    <h3 class="text-center my-4">Collaborateurs en poste</h3>
+                    <div style="width:199px">
+                        <a th:href="@{/affectations/restaurant/{id}(id=${response.data.id})}" class="btn btn-success">
+                            Ajouter un collaborateur
+                        </a>
+                    </div>
+                </div>
                 <div class="container mb-4" th:if="${filter != null}">
                     <form th:action="@{/restaurants/{id}/filter/current(id=${response.data.id})}" method="post" th:object="${filter}">
                         <div class="d-flex column-gap-4 justify-content-center align-items-center flex-wrap">

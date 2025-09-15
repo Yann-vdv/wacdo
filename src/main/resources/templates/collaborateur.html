@@ -63,7 +63,15 @@
             </div>
 
             <div class="container" th:if="${collabCurrentAff != null and !collabCurrentAff.empty}">
-                <h3 class="text-center my-4">Affectation en cours</h3>
+                <div class="d-flex column-gap-2 justify-content-evenly align-items-center">
+                    <div style="width:169px"></div>
+                    <h3 class="text-center my-4">Affectation en cours</h3>
+                    <div style="width:169px">
+                        <a th:href="@{/affectations/collaborateur/{id}(id=${response.data.id})}" class="btn btn-success">
+                            Nouvelle affectation
+                        </a>
+                    </div>
+                </div>
                 <table class="table table-bordered">
                     <thead>
                     <tr>
