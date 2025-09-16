@@ -2,6 +2,7 @@ package com.gdu.wacdo.repositories;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,6 +15,8 @@ public interface CollaborateurRepository extends JpaRepository<Collaborateur, Lo
     List<Collaborateur> findByNom(String nom);
 
     List<Collaborateur> findByAdministrateurTrue();
+
+    Optional<Collaborateur> findByNomAndPrenomAndAdministrateurTrue(String nom, String prenom);
 
     @Query("SELECT c FROM Collaborateur c " +
             "WHERE (:nom IS NULL OR c.nom LIKE %:nom%) " +

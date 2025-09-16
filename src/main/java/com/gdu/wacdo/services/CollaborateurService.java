@@ -10,6 +10,11 @@ import com.gdu.wacdo.repositories.CollaborateurRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,7 +24,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class CollaborateurService {
+public class CollaborateurService implements UserDetailsService {
 
     private final CollaborateurRepository collaborateurRepository;
     private final AffectationRepository affectationRepository;
@@ -31,10 +36,31 @@ public class CollaborateurService {
         this.modelMapper = modelMapper;
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        String[] parts = username.split("\\.");
+        if (parts.length != 2) {
+            throw new UsernameNotFoundException("Format de 'username' invalide. Format attendu : nom.prenom");
+        }
+        String nom = parts[0];
+        String prenom = parts[1];
+        Collaborateur admin = collaborateurRepository.findByNomAndPrenomAndAdministrateurTrue(nom, prenom)
+                .orElseThrow(() -> new UsernameNotFoundException("Pas d'admin trouvé avec le nom: " + nom + " et le prenom: " + prenom));
+
+        return User.withUsername(username)
+                .password(admin.getPassWord())
+                .roles("ADMIN")
+                .build();
+    }
+
     public CollabDTO create(NewCollabDTO newCollabDTO) {
         try {
             Collaborateur newCollab;
             newCollab = modelMapper.map(newCollabDTO, Collaborateur.class);
+            if (newCollab.isAdministrateur()){       //encrypt admin password
+                var bCryptEncoder = new BCryptPasswordEncoder();
+                newCollab.setPassWord(bCryptEncoder.encode(newCollab.getPassWord()));
+            }
             Collaborateur createdCollab = collaborateurRepository.save(newCollab);
             if(createdCollab.getId() != null) {
                 CollabDTO collabDTO;

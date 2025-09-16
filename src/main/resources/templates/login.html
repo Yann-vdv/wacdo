@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" xmlns:th=“http://www.thymeleaf.org”>
+<head th:fragment="page_head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wacdo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/"/>
+    <link rel="stylesheet" th:href="@{/css/sign-in.css}">
+</head>
+    <body class="d-flex align-items-center py-4 bg-body-tertiary min-vh-100">
+        <main class="form-signin w-100 m-auto p-3" style="max-width: 330px;">
+            <form th:action="@{/login}" method="post" onsubmit="combineFields()" class="d-flex flex-column row-gap-2">
+                <h1 class="h3 mb-3 fw-normal">Se connecter</h1>
+                <input type="hidden" name="username" id="username"/>
+                <div class="form-floating">
+                    <input type="text" name="nom" class="form-control form-signin-input-top" id="nom" placeholder="Doe">
+                    <label for="nom">Nom</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" name="prenom" class="form-control form-signin-input" id="prenom" placeholder="Jhon">
+                    <label for="prenom">Prénom</label>
+                </div>
+                <div class="form-floating">
+                    <input type="password" name="password" class="form-control form-signin-input-bot" id="password" placeholder="password1234">
+                    <label for="password">Mot de passe</label>
+                </div>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary w-100 py-2">Connexion</button>
+                </div>
+                <p class="mt-5 mb-3 text-body-secondary">©  [[${#dates.format(#dates.createNow(), 'yyyy')}]] - Wacdo</p>
+            </form>
+            <div th:if="${param.error != null or param.logout != null}" class="align-items-center alert position-fixed top-0 end-0 m-3" role="alert"
+                 aria-live="assertive" aria-atomic="true"
+                 data-bs-animation="true" data-bs-autohide="true"  data-bs-delay="5000"
+                 th:classappend="${param.error != null ? 'alert-danger' : (param.logout != null ? 'alert-secondary' : '')}">
+                <div class="d-flex">
+                    <div th:text="${param.error != null ? 'Nom, prénom ou mot de passe invalide' : (param.logout != null ? 'Vous avez été déconnecté.' : '')}" class="toast-body"></div>
+                    <button type="button" class="btn-close mx-2 m-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            <script th:inline="javascript">
+                function combineFields() {
+                  const nom = document.getElementById("nom").value.trim();
+                  const prenom = document.getElementById("prenom").value.trim();
+                  document.getElementById("username").value = nom + "." + prenom;
+                }
+                if([[${param.error}]] || [[${param.logout}]]) {
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const toastEl = document.querySelector('.alert');
+                        if (toastEl) {
+                            const toast = new bootstrap.Toast(toastEl);
+                            toast.show();
+                        }
+                    });
+                }
+            </script>
+
+        </main>
+    </body>
+</html>
