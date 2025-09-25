@@ -9,7 +9,8 @@ import java.util.Objects;
 public class WacdoApplication {
 
 	public static void main(String[] args) {
-        String trustStorePassword = System.getProperty("custom.truststore.password", "W@cdoP@ss");
+        String trustStorePassword = System.getProperty("custom.truststore.password", "defaultPass");
+        System.out.print(trustStorePassword);
 
         String trustStorePath = Objects.requireNonNull(WacdoApplication.class.getResource("/ca-truststore.jks")).getPath();
         System.setProperty("javax.net.ssl.trustStore", trustStorePath);
