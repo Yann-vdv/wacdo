@@ -22,6 +22,8 @@ public class Collaborateur {
     private String nom;
     private String prenom;
 
+    private String email;
+
     private LocalDate dateEmbauche;
     
     private boolean administrateur;

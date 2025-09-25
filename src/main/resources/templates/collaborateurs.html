@@ -23,6 +23,10 @@
                             <input type="text" th:field="*{prenom}" id="filterPrenom">
                         </div>
                         <div>
+                            <label for="filterEmail" class="me-1">Email</label>
+                            <input type="email" th:field="*{email}" id="filterEmail">
+                        </div>
+                        <div>
                             <label for="filterDateEmbauche" class="me-1">Date d'embauche</label>
                             <input type="date" th:field="*{dateEmbauche}" id="filterDateEmbauche">
                         </div>
@@ -38,6 +42,7 @@
                         <th scope="col">ID</th>
                         <th scope="col">Nom</th>
                         <th scope="col">Prénom</th>
+                        <th scope="col">Email</th>
                         <th scope="col">Date d'embauche</th>
                         <!--<th scope="col">Administrateur</th>-->
                     </tr>
@@ -47,6 +52,7 @@
                         <td th:text="${col?.id}"></td>
                         <td th:text="${col?.nom}"></td>
                         <td th:text="${col?.prenom}"></td>
+                        <td th:text="${col?.email}"></td>
                         <td th:text="${col?.dateEmbauche}"></td>
                         <!--<td th:text="${col?.administrateur}"></td>-->
                     </tr>
@@ -64,6 +70,10 @@
                     <div>
                         <label for="prenom" class="me-1">Prénom</label>
                         <input type="text" th:field="*{prenom}" id="prenom">
+                    </div>
+                    <div>
+                        <label for="email" class="me-1">Email</label>
+                        <input type="email" th:field="*{email}" id="email">
                     </div>
                     <div>
                         <label for="dateEmbauche" class="me-1">Date d'embauche</label>

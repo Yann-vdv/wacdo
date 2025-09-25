@@ -2,18 +2,12 @@ package com.gdu.wacdo.services;
 
 import com.gdu.wacdo.DTO.*;
 import com.gdu.wacdo.entities.Affectation;
-import com.gdu.wacdo.entities.ApiResponse;
-import com.gdu.wacdo.entities.Collaborateur;
 import com.gdu.wacdo.entities.Collaborateur;
 import com.gdu.wacdo.repositories.AffectationRepository;
 import com.gdu.wacdo.repositories.CollaborateurRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class CollaborateurService implements UserDetailsService {
+public class CollaborateurService {
 
     private final CollaborateurRepository collaborateurRepository;
     private final AffectationRepository affectationRepository;
@@ -34,23 +28,6 @@ public class CollaborateurService implements UserDetailsService {
         this.collaborateurRepository = collaborateurRepository;
         this.affectationRepository = affectationRepository;
         this.modelMapper = modelMapper;
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        String[] parts = username.split("\\.");
-        if (parts.length != 2) {
-            throw new UsernameNotFoundException("Format de 'username' invalide. Format attendu : nom.prenom");
-        }
-        String nom = parts[0];
-        String prenom = parts[1];
-        Collaborateur admin = collaborateurRepository.findByNomAndPrenomAndAdministrateurTrue(nom, prenom)
-                .orElseThrow(() -> new UsernameNotFoundException("Pas d'admin trouvé avec le nom: " + nom + " et le prenom: " + prenom));
-
-        return User.withUsername(username)
-                .password(admin.getPassWord())
-                .roles("ADMIN")
-                .build();
     }
 
     public CollabDTO create(NewCollabDTO newCollabDTO) {
@@ -148,7 +125,7 @@ public class CollaborateurService implements UserDetailsService {
     }
 
     public List<CollabDTO> findAllForViewFiltered(CollabDTO filterCollab) {
-        List<Collaborateur> collabs = collaborateurRepository.findAllFiltered(filterCollab.getNom(), filterCollab.getPrenom(),filterCollab.getDateEmbauche());
+        List<Collaborateur> collabs = collaborateurRepository.findAllFiltered(filterCollab.getNom(), filterCollab.getPrenom(), filterCollab.getEmail(), filterCollab.getDateEmbauche());
         List<CollabDTO> collabsDTO = new ArrayList<>();
         for (Collaborateur collaborateur : collabs) {
             collabsDTO.add(modelMapper.map(collaborateur, CollabDTO.class));

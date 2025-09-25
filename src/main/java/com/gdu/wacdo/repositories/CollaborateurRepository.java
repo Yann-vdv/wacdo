@@ -18,11 +18,15 @@ public interface CollaborateurRepository extends JpaRepository<Collaborateur, Lo
 
     Optional<Collaborateur> findByNomAndPrenomAndAdministrateurTrue(String nom, String prenom);
 
+    Optional<Collaborateur> findByEmailAndAdministrateurTrue(String email);
+
     @Query("SELECT c FROM Collaborateur c " +
             "WHERE (:nom IS NULL OR c.nom LIKE %:nom%) " +
             "AND (:prenom IS NULL OR c.prenom LIKE %:prenom%) " +
+            "AND (:email IS NULL OR c.email LIKE %:email%) " +
             "AND (:dateEmbauche IS NULL OR c.dateEmbauche = :dateEmbauche)")
     List<Collaborateur> findAllFiltered(@Param("nom") String nom,
-                                     @Param("prenom") String prenom,
-                                     @Param("dateEmbauche") LocalDate dateEmbauche);
+                                        @Param("prenom") String prenom,
+                                        @Param("email") String email,
+                                        @Param("dateEmbauche") LocalDate dateEmbauche);
 }

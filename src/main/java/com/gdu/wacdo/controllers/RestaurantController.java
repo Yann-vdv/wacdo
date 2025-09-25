@@ -12,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,6 +39,12 @@ public class RestaurantController {
     @GetMapping
     public String restaurants(Model model){
         List<RestaurantDTO> restaurantsDTO = restaurantService.findAllForView();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new UsernameNotFoundException("Aucun utilisateur connecté");
+        } else {
+            log.info("user : {}",authentication);
+        }
         if (restaurantsDTO != null) {
             ApiResponse<List<RestaurantDTO>> response = new ApiResponse<>(Status.SUCCESS,restaurantsDTO,true,"Restaurants récupérés avec succès");
             model.addAttribute("response", response);

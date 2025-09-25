@@ -11,16 +11,11 @@
 </head>
     <body class="d-flex align-items-center py-4 bg-body-tertiary min-vh-100">
         <main class="form-signin w-100 m-auto p-3" style="max-width: 330px;">
-            <form th:action="@{/login}" method="post" onsubmit="combineFields()" class="d-flex flex-column row-gap-2">
+            <form th:action="@{/login}" method="post" class="d-flex flex-column row-gap-2">
                 <h1 class="h3 mb-3 fw-normal">Se connecter</h1>
-                <input type="hidden" name="username" id="username"/>
                 <div class="form-floating">
-                    <input type="text" name="nom" class="form-control form-signin-input-top" id="nom" placeholder="Doe">
-                    <label for="nom">Nom</label>
-                </div>
-                <div class="form-floating">
-                    <input type="text" name="prenom" class="form-control form-signin-input" id="prenom" placeholder="Jhon">
-                    <label for="prenom">Prénom</label>
+                    <input type="email" name="username" class="form-control form-signin-input-top" id="email" placeholder="JhonDoe@gmail.com">
+                    <label for="email">Email</label>
                 </div>
                 <div class="form-floating">
                     <input type="password" name="password" class="form-control form-signin-input-bot" id="password" placeholder="password1234">
@@ -36,16 +31,11 @@
                  data-bs-animation="true" data-bs-autohide="true"  data-bs-delay="5000"
                  th:classappend="${param.error != null ? 'alert-danger' : (param.logout != null ? 'alert-secondary' : '')}">
                 <div class="d-flex">
-                    <div th:text="${param.error != null ? 'Nom, prénom ou mot de passe invalide' : (param.logout != null ? 'Vous avez été déconnecté.' : '')}" class="toast-body"></div>
+                    <div th:text="${param.error != null ? 'Email et/ou mot de passe invalide' : (param.logout != null ? 'Vous avez été déconnecté.' : '')}" class="toast-body"></div>
                     <button type="button" class="btn-close mx-2 m-auto" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </div>
             <script th:inline="javascript">
-                function combineFields() {
-                  const nom = document.getElementById("nom").value.trim();
-                  const prenom = document.getElementById("prenom").value.trim();
-                  document.getElementById("username").value = nom + "." + prenom;
-                }
                 if([[${param.error}]] || [[${param.logout}]]) {
                     document.addEventListener("DOMContentLoaded", function () {
                         const toastEl = document.querySelector('.alert');

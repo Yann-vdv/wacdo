@@ -8,6 +8,7 @@ import java.sql.Date;
 public class NewCollabDTO {
     private String nom;
     private String prenom;
+    private String email;
     private Date dateEmbauche;
     private boolean administrateur;
     private String passWord;
