@@ -29,15 +29,19 @@ public class RestaurantService {
     }
 
     public RestaurantDTO create(NewRestaurantDTO newRestaurantDTO) {
+        log.info("Create Restaurant, testNewResto : {}",newRestaurantDTO);
         try {
             Restaurant newRestaurant;
             newRestaurant = modelMapper.map(newRestaurantDTO, Restaurant.class);
+            log.info("modelmapper resto : {}",newRestaurant);
             Restaurant createdRestaurant = restaurantRepository.save(newRestaurant);
+            log.info("Create Restaurant, newResto : {}",createdRestaurant);
             if(createdRestaurant.getId() != null) {
                 RestaurantDTO restaurantDTO;
                 restaurantDTO = modelMapper.map(createdRestaurant, RestaurantDTO.class);
                 return restaurantDTO;
             } else {
+                log.error("Create Restaurant error : le restaurant n'a pas été créer");
                 return null;
             }
         } catch(Exception err) {

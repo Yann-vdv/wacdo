@@ -39,12 +39,12 @@ public class RestaurantController {
     @GetMapping
     public String restaurants(Model model){
         List<RestaurantDTO> restaurantsDTO = restaurantService.findAllForView();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new UsernameNotFoundException("Aucun utilisateur connecté");
-        } else {
-            log.info("user : {}",authentication);
-        }
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication == null || !authentication.isAuthenticated()) {
+//            throw new UsernameNotFoundException("Aucun utilisateur connecté");
+//        } else {
+//            log.info("user : {}",authentication);
+//        }
         if (restaurantsDTO != null) {
             ApiResponse<List<RestaurantDTO>> response = new ApiResponse<>(Status.SUCCESS,restaurantsDTO,true,"Restaurants récupérés avec succès");
             model.addAttribute("response", response);
