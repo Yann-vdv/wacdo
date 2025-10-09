@@ -30,10 +30,10 @@ public class CollaborateurController {
     }
 
     @GetMapping
-    public String collaborateurs(Model model){
+    public String collaborateurs(Model model, @RequestParam(required = false) String error){
         List<CollabDTO> collabsDTO = collaborateurService.findAllForView();
         if (collabsDTO != null) {
-            ApiResponse<List<CollabDTO>> response = new ApiResponse<>(Status.SUCCESS,collabsDTO,true,"Collaborateurs récupérés avec succès");
+            ApiResponse<List<CollabDTO>> response = new ApiResponse<>(error != null ? Status.ERROR : Status.SUCCESS, collabsDTO,true,error != null ? error :"Collaborateurs récupérés avec succès");
             model.addAttribute("response", response);
             model.addAttribute("filterCollaborateur",new CollabDTO());
         } else {
@@ -52,22 +52,21 @@ public class CollaborateurController {
             model.addAttribute("response", response);
             model.addAttribute("filterCollaborateur",new CollabDTO());
         } else {
-            ApiResponse<List<CollabDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des collaborateurs(filtrés) a échouée");
-            model.addAttribute("response", response);
+            return "redirect:/collaborateurs?error=La récupération des collaborateurs(filtrés) a échouée";
         }
         model.addAttribute("collaborateur", new Collaborateur());
         return "collaborateurs";
     }
 
     @GetMapping("/{id}")
-    public String collaborateurById(Model model, @PathVariable Long id) {
+    public String collaborateurById(Model model, @PathVariable Long id, @RequestParam(required = false) String error) {
         CollabDTO collab = collaborateurService.findById(id);
         CollaborateurAffectationFilterDTO emptyFilter = new CollaborateurAffectationFilterDTO();
         List<AffectationDTO> collabCurrentAff = collaborateurService.findCurrentAffectationsForView(id);
         List<AffectationDTO> collabHistoryAff = collaborateurService.findHistoryAffectationsForViewFiltred(id, emptyFilter);
 
         if (collab != null) {
-            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.SUCCESS,collab,true,"Collaborateur récupéré avec succès");
+            ApiResponse<CollabDTO> response = new ApiResponse<>(error != null ? Status.ERROR : Status.SUCCESS, collab,true, error != null ? error : "Collaborateur récupéré avec succès");
             model.addAttribute("response", response);
             model.addAttribute("collaborateur", collab);
             model.addAttribute("filter", emptyFilter);
@@ -75,9 +74,7 @@ public class CollaborateurController {
             model.addAttribute("collabHistoryAff",collabHistoryAff);
             return "collaborateur";
         } else {
-            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération du collaborateur a échouée");
-            model.addAttribute("response", response);
-            return "collaborateurs";
+            return "redirect:/collaborateurs?error=Collaborateur introuvable";
         }
     }
 
@@ -97,9 +94,7 @@ public class CollaborateurController {
             model.addAttribute("collabHistoryAff",collabHistoryAff);
             return "collaborateur";
         } else {
-            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération du collaborateur a échouée");
-            model.addAttribute("response", response);
-            return "collaborateurs";
+            return "redirect:/collaborateurs?error=Collaborateur introuvable";
         }
     }
 
@@ -111,9 +106,7 @@ public class CollaborateurController {
             model.addAttribute("response", response);
             return "collaborateur";
         } else {
-            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La création du collaborateur a échouée");
-            model.addAttribute("response", response);
-            return "collaborateurs";
+            return "redirect:/collaborateurs?error=La création du collaborateur a échouée";
         }
     }
 
@@ -124,11 +117,10 @@ public class CollaborateurController {
             ApiResponse<CollabDTO> response = new ApiResponse<>(Status.SUCCESS,collab,true,"Collaborateur modifié avec succès");
             model.addAttribute("response", response);
             model.addAttribute("collaborateur", response.getData());
+            return "collaborateur";
         } else {
-            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La modification du collaborateur a échouée");
-            model.addAttribute("response", response);
+            return "redirect:/collaborateur/"+id+"?error=La modification du collaborateur a échouée";
         }
-        return "collaborateur";
     }
 
     @DeleteMapping("/delete/{id}")
@@ -139,9 +131,7 @@ public class CollaborateurController {
             model.addAttribute("response", response);
             return "collaborateurs";
         } else {
-            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La suppression du collaborateur a échouée");
-            model.addAttribute("response", response);
-            return "collaborateur";
+            return "redirect:/collaborateur/"+id+"?error=La suppression du collaborateur a échouée";
         }
     }
 }

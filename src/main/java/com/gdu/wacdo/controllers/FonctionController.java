@@ -12,11 +12,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import com.gdu.wacdo.repositories.FonctionRepository;
 
@@ -34,10 +30,10 @@ public class FonctionController {
     }
 
     @GetMapping
-    public String fonctions(Model model){
+    public String fonctions(Model model, @RequestParam(required = false) String error){
         List<FonctionDTO> fonctionsDTO = fonctionService.findAllForView();
         if (fonctionsDTO != null) {
-            ApiResponse<List<FonctionDTO>> response = new ApiResponse<>(Status.SUCCESS,fonctionsDTO,true,"les fonctions ont été récupérés avec succès");
+            ApiResponse<List<FonctionDTO>> response = new ApiResponse<>(error != null ? Status.ERROR : Status.SUCCESS, fonctionsDTO,true, error != null ? error : "les fonctions ont été récupérés avec succès");
             model.addAttribute("response", response);
             model.addAttribute("filterFonction",new FonctionDTO());
         } else {
@@ -64,18 +60,16 @@ public class FonctionController {
     }
 
     @GetMapping("/{id}")
-    public String fonctionById(Model model, @PathVariable Long id) {
+    public String fonctionById(Model model, @PathVariable Long id, @RequestParam(required = false) String error) {
         FonctionDTO fonction = fonctionService.findById(id);
 
         if (fonction != null) {
-            ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.SUCCESS,fonction,true,"la fonction a été récupéré avec succès");
+            ApiResponse<FonctionDTO> response = new ApiResponse<>(error != null ? Status.ERROR : Status.SUCCESS, fonction,true, error != null ? error : "la fonction a été récupéré avec succès");
             model.addAttribute("response", response);
             model.addAttribute("fonction", fonction);
             return "fonction";
         } else {
-            ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération de la fonction a échouée");
-            model.addAttribute("response", response);
-            return "fonctions";
+            return "redirect:/fonctions?error=fonction introuvable";
         }
     }
 
@@ -88,9 +82,7 @@ public class FonctionController {
             model.addAttribute("response", response);
             return "fonction";
         } else {
-            ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La création de la fonction a échouée");
-            model.addAttribute("response", response);
-            return "fonctions";
+            return "redirect:/fonctions?error=La création de la fonction a échouée";
         }
     }
     
@@ -101,11 +93,10 @@ public class FonctionController {
             ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.SUCCESS,fonction,true,"Fonction modifié avec succès");
             model.addAttribute("response", response);
             model.addAttribute("fonction", response.getData());
+            return "fonction";
         } else {
-            ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La modification du fonction a échouée");
-            model.addAttribute("response", response);
+            return "redirect:/fonctions/"+id+"?error=La modification de la fonction a échouée";
         }
-        return "fonction";
     }
 
     @DeleteMapping("/delete/{id}")
@@ -116,9 +107,7 @@ public class FonctionController {
             model.addAttribute("response", response);
             return "fonctions";
         } else {
-            ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La suppression du fonction a échouée");
-            model.addAttribute("response", response);
-            return "fonction";
+            return "redirect:/fonctions/"+id+"?error=La suppression de la fonction a échouée";
         }
     }
 }

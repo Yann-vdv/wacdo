@@ -16,11 +16,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @Slf4j
@@ -36,7 +32,7 @@ public class AffectationController {
     }
 
     @GetMapping
-    public String affectations(Model model){
+    public String affectations(Model model, @RequestParam(required = false) String error){
         List<AffectationDTO> affectationsDTO = affectationService.findAllForView();
         if (affectationsDTO != null) {
             DataDTO processData = affectationService.getProcessData();
@@ -45,7 +41,7 @@ public class AffectationController {
                 model.addAttribute("affectation", new Affectation());
                 model.addAttribute("filterAffectation", new NewAffectationDTO());
             }
-            ApiResponse<List<AffectationDTO>> response = new ApiResponse<>(Status.SUCCESS,affectationsDTO,true,"Affectations récupérés avec succès");
+            ApiResponse<List<AffectationDTO>> response = new ApiResponse<>(error != null ? Status.ERROR : Status.SUCCESS, affectationsDTO,true, error != null ? error : "Affectations récupérés avec succès");
             model.addAttribute("response", response);
         } else {
             ApiResponse<List<AffectationDTO>> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération des affectations a échouée");
@@ -104,11 +100,11 @@ public class AffectationController {
     }
 
     @GetMapping("/{id}")
-    public String affectationById(Model model, @PathVariable Long id) {
+    public String affectationById(Model model, @PathVariable Long id, @RequestParam(required = false) String error) {
         AffectationDTO affectation = affectationService.findById(id);
 
         if (affectation != null) {
-            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.SUCCESS,affectation,true,"Affectation récupéré avec succès");
+            ApiResponse<AffectationDTO> response = new ApiResponse<>(error != null ? Status.ERROR : Status.SUCCESS, affectation,true, error != null ? error : "Affectation récupéré avec succès");
             model.addAttribute("response", response);
             DataDTO processData = affectationService.getProcessData();
             if (!processData.getFonctions().isEmpty() && !processData.getRestaurants().isEmpty() && !processData.getCollabs().isEmpty()) {
@@ -120,7 +116,7 @@ public class AffectationController {
         } else {
             ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération du affectation a échouée");
             model.addAttribute("response", response);
-            return "affectations";
+            return "redirect:/affectations?error=affectation introuvable";
         }
     }
 
@@ -132,9 +128,7 @@ public class AffectationController {
             model.addAttribute("response", response);
             return "affectation";
         } else {
-            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La création du affectation a échouée");
-            model.addAttribute("response", response);
-            return "affectations";
+            return "redirect:/affectations?error=La création du affectation a échouée";
         }
     }
 
@@ -147,11 +141,10 @@ public class AffectationController {
             model.addAttribute("response", response);
             EditAffectationDTO editAffectationDTO = new EditAffectationDTO(response.getData());
             model.addAttribute("affectation", editAffectationDTO);
+            return "affectation";
         } else {
-            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La modification du affectation a échouée");
-            model.addAttribute("response", response);
+            return "redirect:/affectations/"+id+"?error=La modification de l'affectation a échouée";
         }
-        return "affectation";
     }
 
     @DeleteMapping("/delete/{id}")
@@ -162,9 +155,9 @@ public class AffectationController {
             model.addAttribute("response", response);
             return "affectations";
         } else {
-            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La suppression du affectation a échouée");
+            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.ERROR,null,true,"");
             model.addAttribute("response", response);
-            return "affectation";
+            return "redirect:/affectations/"+id+"?error=La suppression de l'affectation a échouée";
         }
     }
 }

@@ -17,11 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @Slf4j
@@ -37,7 +33,7 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public String restaurants(Model model){
+    public String restaurants(Model model, @RequestParam(required = false) String error){
         List<RestaurantDTO> restaurantsDTO = restaurantService.findAllForView();
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        if (authentication == null || !authentication.isAuthenticated()) {
@@ -46,7 +42,7 @@ public class RestaurantController {
 //            log.info("user : {}",authentication);
 //        }
         if (restaurantsDTO != null) {
-            ApiResponse<List<RestaurantDTO>> response = new ApiResponse<>(Status.SUCCESS,restaurantsDTO,true,"Restaurants récupérés avec succès");
+            ApiResponse<List<RestaurantDTO>> response = new ApiResponse<>(error != null ? Status.ERROR : Status.SUCCESS, restaurantsDTO,true, error != null ? error : "Restaurants récupérés avec succès");
             model.addAttribute("response", response);
             model.addAttribute("filterRestaurant",new RestaurantDTO());
         } else {
@@ -73,14 +69,14 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    public String restaurantById(Model model, @PathVariable Long id) {
+    public String restaurantById(Model model, @PathVariable Long id, @RequestParam(required = false) String error) {
         RestaurantDTO restaurant = restaurantService.findById(id);
         CollaborateurAffectationFilterDTO emptyFilter = new CollaborateurAffectationFilterDTO();
         List<RestaurantCollaborateurDTO> currentCollabs = restaurantService.findCurrentCollabsFiltered(id, emptyFilter);
         List<RestaurantCollaborateurDTO> historyCollabs = restaurantService.findHistoryCollabsFiltered(id, emptyFilter);
 
         if (restaurant != null) {
-            ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.SUCCESS,restaurant,true,"Restaurant récupéré avec succès");
+            ApiResponse<RestaurantDTO> response = new ApiResponse<>(error != null ? Status.ERROR : Status.SUCCESS, restaurant,true, error != null ? error : "Restaurant récupéré avec succès");
             model.addAttribute("response", response);
             model.addAttribute("restaurant", response.getData());
             model.addAttribute("filter", emptyFilter);
@@ -88,9 +84,7 @@ public class RestaurantController {
             model.addAttribute("historyCollabs", historyCollabs);
             return "restaurant";
         } else {
-            ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération du restaurant a échouée");
-            model.addAttribute("response", response);
-            return "restaurants";
+            return "redirect:/restaurants?error=Restaurant introuvable";
         }
     }
 
@@ -110,9 +104,7 @@ public class RestaurantController {
             model.addAttribute("historyCollabs", historyCollabs);
             return "restaurant";
         } else {
-            ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La récupération du restaurant a échouée");
-            model.addAttribute("response", response);
-            return "restaurants";
+            return "redirect:/restaurants?error=Restaurant introuvable";
         }
     }
 
@@ -126,7 +118,7 @@ public class RestaurantController {
         } else {
             ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La création du restaurant a échouée");
             model.addAttribute("response", response);
-            return "restaurants";
+            return "redirect:/restaurants?error=Restaurant introuvable";
         }
     }
 
@@ -137,11 +129,10 @@ public class RestaurantController {
             ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.SUCCESS,restaurant,true,"Restaurant modifié avec succès");
             model.addAttribute("response", response);
             model.addAttribute("restaurant", response.getData());
+            return "restaurant";
         } else {
-            ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La modification du restaurant a échouée");
-            model.addAttribute("response", response);
+            return "redirect:/restaurants/"+id+"?error=La modification du restaurant a échouée";
         }
-        return "restaurant";
     }
 
     @DeleteMapping("/delete/{id}")
@@ -152,9 +143,7 @@ public class RestaurantController {
             model.addAttribute("response", response);
             return "restaurants";
         } else {
-            ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La suppression du restaurant a échouée");
-            model.addAttribute("response", response);
-            return "restaurant";
+            return "redirect:/restaurants/"+id+"?error=La suppression du restaurant a échouée";
         }
     }
 }
