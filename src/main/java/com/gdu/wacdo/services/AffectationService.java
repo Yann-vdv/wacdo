@@ -153,4 +153,8 @@ public class AffectationService {
 
         return new DataDTO(collabs, restaurants, fonctions);
     }
+
+    public void deleteAll() {
+        affectationRepository.deleteAll();
+    }
 }

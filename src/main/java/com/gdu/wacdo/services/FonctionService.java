@@ -119,4 +119,8 @@ public class FonctionService {
         }
         return fonctionsDTO;
     }
+
+    public void deleteAll() {
+        fonctionRepository.deleteAll();
+    }
 }

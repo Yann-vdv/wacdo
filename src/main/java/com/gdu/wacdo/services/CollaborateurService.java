@@ -150,4 +150,8 @@ public class CollaborateurService {
         }
         return affectationsDTO;
     }
+
+    public void deleteAll() {
+        collaborateurRepository.deleteAll();
+    }
 }

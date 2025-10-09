@@ -3,13 +3,15 @@ package com.gdu.wacdo.DTO;
 import com.gdu.wacdo.entities.Collaborateur;
 import com.gdu.wacdo.entities.Fonction;
 import com.gdu.wacdo.entities.Restaurant;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
-@Slf4j
+@AllArgsConstructor
+@NoArgsConstructor
 public class AffectationDTO {
     private Long id;
     private LocalDate dateDebut;
