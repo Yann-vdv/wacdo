@@ -80,7 +80,7 @@ public class FonctionController {
             //model.addAttribute("fonction", fonction);
             ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.SUCCESS,fonction,true,"la fonction a été créé avec succès");
             model.addAttribute("response", response);
-            return "fonction";
+            return "redirect:/fonctions/"+fonction.getId();
         } else {
             return "redirect:/fonctions?error=La création de la fonction a échouée";
         }
@@ -99,13 +99,13 @@ public class FonctionController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteFonction(@PathVariable Long id, Model model) {
         boolean res = fonctionService.delete(id);
         if (res) {
             ApiResponse<FonctionDTO> response = new ApiResponse<>(Status.SUCCESS,null,true,"Fonction supprimé avec succès");
             model.addAttribute("response", response);
-            return "fonctions";
+            return "redirect:/fonctions";
         } else {
             return "redirect:/fonctions/"+id+"?error=La suppression de la fonction a échouée";
         }

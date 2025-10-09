@@ -114,7 +114,7 @@ public class RestaurantController {
         if (restaurant != null) {
             ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.SUCCESS,restaurant,true,"Restaurant créé avec succès");
             model.addAttribute("response", response);
-            return "restaurant";
+            return "redirect:/restaurant"+restaurant.getId();
         } else {
             ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.ERROR,null,true,"La création du restaurant a échouée");
             model.addAttribute("response", response);
@@ -135,13 +135,13 @@ public class RestaurantController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteRestaurant(@PathVariable Long id, Model model) {
         boolean res = restaurantService.delete(id);
         if (res) {
             ApiResponse<RestaurantDTO> response = new ApiResponse<>(Status.SUCCESS,null,true,"Restaurant supprimé avec succès");
             model.addAttribute("response", response);
-            return "restaurants";
+            return "redirect:/restaurants";
         } else {
             return "redirect:/restaurants/"+id+"?error=La suppression du restaurant a échouée";
         }

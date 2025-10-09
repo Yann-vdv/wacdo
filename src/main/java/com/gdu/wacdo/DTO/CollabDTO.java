@@ -3,6 +3,7 @@ package com.gdu.wacdo.DTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -15,5 +16,6 @@ public class CollabDTO {
     private String nom;
     private String prenom;
     private String email;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateEmbauche;
 }

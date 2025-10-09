@@ -126,7 +126,7 @@ public class AffectationController {
         if (affectation != null) {
             ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.SUCCESS,affectation,true,"Affectation créé avec succès");
             model.addAttribute("response", response);
-            return "affectation";
+            return "redirect:/affectation/"+affectation.getId();
         } else {
             return "redirect:/affectations?error=La création du affectation a échouée";
         }
@@ -147,13 +147,13 @@ public class AffectationController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteAffectation(@PathVariable Long id, Model model) {
         boolean res = affectationService.delete(id);
         if (res) {
             ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.SUCCESS,null,true,"Affectation supprimé avec succès");
             model.addAttribute("response", response);
-            return "affectations";
+            return "redirect:/affectations";
         } else {
             ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.ERROR,null,true,"");
             model.addAttribute("response", response);
