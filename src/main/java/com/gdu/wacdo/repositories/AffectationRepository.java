@@ -96,12 +96,10 @@ public interface AffectationRepository extends JpaRepository<Affectation, Long> 
     @Query("SELECT a FROM Affectation a " +
             "WHERE (:dateDebut IS NULL OR a.dateDebut = :dateDebut) " +
             "AND (:dateFin IS NULL OR a.dateFin = :dateFin) " +
-            "AND (:restaurantId IS NULL OR a.restaurant.id = :restaurantId) " +
-            "AND (:collaborateurId IS NULL OR a.collaborateur.id = :collaborateurId) " +
+            "AND (:ville IS NULL OR a.restaurant.ville = :ville) " +
             "AND (:fonctionId IS NULL OR a.fonction.id = :fonctionId)")
     List<Affectation> findAllFiltered(@Param("dateDebut") LocalDate dateDebut,
                                       @Param("dateFin") LocalDate dateFin,
-                                      @Param("restaurantId") Long restaurantId,
-                                      @Param("collaborateurId") Long collaborateurId,
+                                      @Param("ville") String ville,
                                       @Param("fonctionId") Long fonctionId);
 }

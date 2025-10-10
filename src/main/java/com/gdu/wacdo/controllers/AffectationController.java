@@ -1,9 +1,6 @@
 package com.gdu.wacdo.controllers;
 
-import com.gdu.wacdo.DTO.AffectationDTO;
-import com.gdu.wacdo.DTO.DataDTO;
-import com.gdu.wacdo.DTO.EditAffectationDTO;
-import com.gdu.wacdo.DTO.NewAffectationDTO;
+import com.gdu.wacdo.DTO.*;
 import com.gdu.wacdo.entities.ApiResponse;
 import com.gdu.wacdo.entities.Affectation;
 import com.gdu.wacdo.entities.Status;
@@ -39,7 +36,7 @@ public class AffectationController {
             if (!processData.getFonctions().isEmpty() && !processData.getRestaurants().isEmpty() && !processData.getCollabs().isEmpty()) {
                 model.addAttribute("processData", processData);
                 model.addAttribute("affectation", new Affectation());
-                model.addAttribute("filterAffectation", new NewAffectationDTO());
+                model.addAttribute("filterAffectation", new AffectationFilterDTO());
             }
             ApiResponse<List<AffectationDTO>> response = new ApiResponse<>(error != null ? Status.ERROR : Status.SUCCESS, affectationsDTO,true, error != null ? error : "Affectations récupérés avec succès");
             model.addAttribute("response", response);
@@ -51,7 +48,7 @@ public class AffectationController {
     }
 
     @PostMapping("/filtered")
-    public String affectationsFiltered(NewAffectationDTO filteredAffectation,Model model){
+    public String affectationsFiltered(AffectationFilterDTO filteredAffectation,Model model){
         List<AffectationDTO> affectationsDTO = affectationService.findAllForViewFiltered(filteredAffectation);
         if (affectationsDTO != null) {
             DataDTO processData = affectationService.getProcessData();

@@ -137,8 +137,8 @@ public class AffectationService {
         return affectationsDTO;
     }
 
-    public List<AffectationDTO> findAllForViewFiltered(NewAffectationDTO filterAffectation) {
-        List<Affectation> affectations = affectationRepository.findAllFiltered(filterAffectation.getDateDebut(),filterAffectation.getDateFin(),filterAffectation.getRestaurant(),filterAffectation.getCollaborateur(),filterAffectation.getFonction());
+    public List<AffectationDTO> findAllForViewFiltered(AffectationFilterDTO filterAffectation) {
+        List<Affectation> affectations = affectationRepository.findAllFiltered(filterAffectation.getDateDebut(),filterAffectation.getDateFin(),filterAffectation.getVille(),filterAffectation.getFonction());
         List<AffectationDTO> affectationsDTO = new ArrayList<>();
         for (Affectation affectation : affectations) {
             affectationsDTO.add(modelMapper.map(affectation, AffectationDTO.class));

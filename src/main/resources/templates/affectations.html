@@ -23,21 +23,11 @@
                             <input type="date" th:field="*{dateFin}" id="filterDateFin">
                         </div>
                         <div>
-                            <label for="filterRestaurant" class="me-1">Restaurant</label>
-                            <select id="filterRestaurant" th:field="*{restaurant}">
-                                <option value=""></option>
-                                <option th:each="restaurant : ${processData.restaurants}" th:value="${restaurant.id}" th:text="${restaurant.nom}"></option>
-                            </select>
+                            <label for="ville" class="me-1">Ville</label>
+                            <input type="text" th:field="*{ville}" id="ville">
                         </div>
                         <div>
-                            <label for="filterCollaborateur" class="me-1">Collaborateur</label>
-                            <select id="filterCollaborateur" th:field="*{collaborateur}">
-                                <option value=""></option>
-                                <option th:each="collab : ${processData.collabs}" th:value="${collab.id}" th:text="${collab.prenom + ' ' + collab.nom}"></option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="filterFonction" class="me-1">Fonction</label>
+                            <label for="filterFonction" class="me-1">Poste</label>
                             <select id="filterFonction" th:field="*{fonction}">
                                 <option value=""></option>
                                 <option th:each="fonction : ${processData.fonctions}" th:value="${fonction.id}" th:text="${fonction.nom}"></option>
