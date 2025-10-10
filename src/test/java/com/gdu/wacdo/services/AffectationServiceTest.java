@@ -1,6 +1,7 @@
 package com.gdu.wacdo.services;
 
 import com.gdu.wacdo.DTO.*;
+import com.gdu.wacdo.entities.Status;
 import com.gdu.wacdo.repositories.AffectationRepository;
 import com.gdu.wacdo.repositories.CollaborateurRepository;
 import com.gdu.wacdo.repositories.FonctionRepository;
@@ -20,6 +21,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
@@ -122,17 +125,17 @@ public class AffectationServiceTest {
 
     @Test
     void getFilteredAffectations() throws Exception {
-        AffectationDTO expected = affectationService.create(affectation1);
+        affectationService.create(affectation1);
         affectationService.create(affectation2);
+        affectationService.create(affectation3);
 
-        NewAffectationDTO filter = new NewAffectationDTO(null,null,null,collab1.getId(),null);
+        AffectationFilterDTO filter = new AffectationFilterDTO(null,null,"Marseille",null);
         List<AffectationDTO> filtered = affectationService.findAllForViewFiltered(filter);
-        assertEquals(1, filtered.size());
-        AffectationDTO result = filtered.getFirst();
-        assertEquals(expected.getId(),result.getId());
+        assertEquals(2, filtered.size());
+        assertThat(filtered, everyItem(hasProperty("restaurant", hasProperty("ville", equalTo("Marseille")))));
 
         //aucune affectation ne correspond à ce filtre
-        NewAffectationDTO filter2 = new NewAffectationDTO(null,null,null,null,999L);
+        AffectationFilterDTO filter2 = new AffectationFilterDTO(null,null,null,999L);
         List<AffectationDTO> filtered2 = affectationService.findAllForViewFiltered(filter2);
         assertEquals(0, filtered2.size());
     }
