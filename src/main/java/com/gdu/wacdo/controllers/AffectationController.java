@@ -124,9 +124,7 @@ public class AffectationController {
     public String newAffectation(NewAffectationDTO newAffectation, Model model) {
         AffectationDTO affectation = affectationService.create(newAffectation);
         if (affectation != null) {
-            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.SUCCESS,affectation,true,"Affectation créé avec succès");
-            model.addAttribute("response", response);
-            return "redirect:/affectation/"+affectation.getId();
+            return "redirect:/affectations/"+affectation.getId();
         } else {
             return "redirect:/affectations?error=La création du affectation a échouée";
         }
@@ -134,13 +132,11 @@ public class AffectationController {
 
     @PostMapping({"/edit/{id}"})
     public String editAffectation(@PathVariable Long id, EditAffectationDTO editedAffectation, Model model) {
-        log.info("edited edit data : {}", editedAffectation);
         AffectationDTO affectation = affectationService.edit(id, editedAffectation);
         if (affectation != null) {
             ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.SUCCESS,affectation,true,"Affectation modifié avec succès");
             model.addAttribute("response", response);
-            EditAffectationDTO editAffectationDTO = new EditAffectationDTO(response.getData());
-            model.addAttribute("affectation", editAffectationDTO);
+            model.addAttribute("affectation", response.getData());
             return "affectation";
         } else {
             return "redirect:/affectations/"+id+"?error=La modification de l'affectation a échouée";
@@ -151,12 +147,8 @@ public class AffectationController {
     public String deleteAffectation(@PathVariable Long id, Model model) {
         boolean res = affectationService.delete(id);
         if (res) {
-            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.SUCCESS,null,true,"Affectation supprimé avec succès");
-            model.addAttribute("response", response);
             return "redirect:/affectations";
         } else {
-            ApiResponse<AffectationDTO> response = new ApiResponse<>(Status.ERROR,null,true,"");
-            model.addAttribute("response", response);
             return "redirect:/affectations/"+id+"?error=La suppression de l'affectation a échouée";
         }
     }

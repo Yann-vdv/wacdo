@@ -130,7 +130,7 @@ public class RestaurantService {
     }
 
     public List<RestaurantDTO> findAllForViewFiltered(RestaurantDTO filterRestaurant) {
-        List<Restaurant> restaurants = restaurantRepository.findAllFiltered(filterRestaurant.getNom(),filterRestaurant.getAdresse(),filterRestaurant.getCodePostal(),filterRestaurant.getVille());
+        List<Restaurant> restaurants = restaurantRepository.findAllFiltered(filterRestaurant.getNom(),filterRestaurant.getCodePostal(),filterRestaurant.getVille());
         List<RestaurantDTO> restaurantsDTO = new ArrayList<>();
         for (Restaurant restaurant : restaurants) {
             restaurantsDTO.add(modelMapper.map(restaurant, RestaurantDTO.class));

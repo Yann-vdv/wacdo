@@ -102,8 +102,6 @@ public class CollaborateurController {
     public String newCollab(NewCollabDTO collaborateur, Model model) {
         CollabDTO collab = collaborateurService.create(collaborateur);
         if (collab != null) {
-            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.SUCCESS,collab,true,"Collaborateur créé avec succès");
-            model.addAttribute("response", response);
             return "redirect:/collaborateurs/"+collab.getId();
         } else {
             return "redirect:/collaborateurs?error=La création du collaborateur a échouée";
@@ -119,7 +117,7 @@ public class CollaborateurController {
             model.addAttribute("collaborateur", response.getData());
             return "collaborateur";
         } else {
-            return "redirect:/collaborateur/"+id+"?error=La modification du collaborateur a échouée";
+            return "redirect:/collaborateurs/"+id+"?error=La modification du collaborateur a échouée";
         }
     }
 
@@ -127,11 +125,9 @@ public class CollaborateurController {
     public String deleteCollab(@PathVariable Long id, Model model) {
         boolean res = collaborateurService.delete(id);
         if (res) {
-            ApiResponse<CollabDTO> response = new ApiResponse<>(Status.SUCCESS,null,true,"Collaborateur supprimé avec succès");
-            model.addAttribute("response", response);
             return "redirect:/collaborateurs";
         } else {
-            return "redirect:/collaborateur/"+id+"?error=La suppression du collaborateur a échouée";
+            return "redirect:/collaborateurs/"+id+"?error=La suppression du collaborateur a échouée";
         }
     }
 }

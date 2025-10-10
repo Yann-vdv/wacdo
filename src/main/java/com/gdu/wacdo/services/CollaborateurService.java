@@ -125,7 +125,7 @@ public class CollaborateurService {
     }
 
     public List<CollabDTO> findAllForViewFiltered(CollabDTO filterCollab) {
-        List<Collaborateur> collabs = collaborateurRepository.findAllFiltered(filterCollab.getNom(), filterCollab.getPrenom(), filterCollab.getEmail(), filterCollab.getDateEmbauche());
+        List<Collaborateur> collabs = collaborateurRepository.findAllFiltered(filterCollab.getNom(), filterCollab.getPrenom(), filterCollab.getEmail());
         List<CollabDTO> collabsDTO = new ArrayList<>();
         for (Collaborateur collaborateur : collabs) {
             collabsDTO.add(modelMapper.map(collaborateur, CollabDTO.class));
