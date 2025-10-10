@@ -20,8 +20,7 @@
 
 - Java 21
 - Maven
-- MySQL
-- IDE : IntelliJ, Eclipse ou VS Code
+- MySQL 8.0.35
 
 ---
 ## 🧩 Installation et lancement
@@ -39,3 +38,6 @@ mvn spring-boot:run
 http://localhost:8080
 4. Accéder au panel des tests :
 http://localhost:63342/wacdo/target/site/jacoco/index.html
+5. Utilisateur de test :
+- Email : TestUser@gmail.com
+- Mot de Passe : test1234
