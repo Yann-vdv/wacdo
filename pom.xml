@@ -6,19 +6,22 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.5.4</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>com.gdu</groupId>
 	<artifactId>wacdo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>wacdo</name>
-	<description>Système de gestion des restaurants</description>
+	<description>Système de gestion des affectations des restaurants WacDo</description>
 	<url/>
 	<licenses>
 		<license/>
 	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+            <name>Yann Van De Veire</name>
+            <email>yann.vdv.pro@gmail.com</email>
+        </developer>
 	</developers>
 	<scm>
 		<connection/>
