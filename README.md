@@ -37,12 +37,14 @@ mvn spring-boot:run
 3. **Accéder au site :**
 - http://localhost:8080
 - https://wacdo-9gkn.onrender.com/
-4. **Lancer les tests :
+4. **Lancer les tests :**
 ```bash
 mvn clean test 
 ```
 5. **Accéder au panel des tests :**  
+```bash
 .../wacdo/target/site/jacoco/index.html
-6. **Utilisateur de test :**
+```
+6. **Utilisateur de test :**  
 - Email : TestUser@gmail.com
 - Mot de Passe : test1234
