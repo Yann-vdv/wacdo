@@ -2,7 +2,6 @@ package com.gdu.wacdo.services;
 
 import com.gdu.wacdo.DTO.NewFonctionDTO;
 import com.gdu.wacdo.DTO.FonctionDTO;
-import com.gdu.wacdo.repositories.FonctionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,8 +22,6 @@ public class FonctionServiceTest {
 
     @Autowired
     private FonctionService fonctionService;
-
-    private FonctionRepository fonctionRepository;
 
     @BeforeEach
     void setup() {

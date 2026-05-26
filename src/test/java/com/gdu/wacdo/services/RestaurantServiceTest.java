@@ -2,9 +2,7 @@ package com.gdu.wacdo.services;
 
 import com.gdu.wacdo.DTO.NewRestaurantDTO;
 import com.gdu.wacdo.DTO.RestaurantDTO;
-import com.gdu.wacdo.repositories.RestaurantRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -26,8 +24,6 @@ public class RestaurantServiceTest {
 
     @Autowired
     private RestaurantService restaurantService;
-
-    private RestaurantRepository restaurantRepository;
 
     @BeforeEach
     void setup() {

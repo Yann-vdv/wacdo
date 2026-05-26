@@ -1,7 +1,6 @@
 package com.gdu.wacdo.entities;
 
 import jakarta.persistence.*;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 

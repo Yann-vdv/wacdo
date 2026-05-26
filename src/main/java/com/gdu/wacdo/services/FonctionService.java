@@ -3,7 +3,6 @@ package com.gdu.wacdo.services;
 import com.gdu.wacdo.DTO.FonctionDTO;
 import com.gdu.wacdo.DTO.NewFonctionDTO;
 import com.gdu.wacdo.entities.Fonction;
-import com.gdu.wacdo.entities.Restaurant;
 import com.gdu.wacdo.repositories.FonctionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

@@ -1,12 +1,8 @@
 package com.gdu.wacdo.repositories;
-import com.gdu.wacdo.DTO.CollaborateurAffectationFilterDTO;
 import com.gdu.wacdo.DTO.RestaurantCollaborateurDTO;
-import com.gdu.wacdo.entities.Collaborateur;
-import com.gdu.wacdo.entities.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import com.gdu.wacdo.entities.Affectation;

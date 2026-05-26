@@ -1,6 +1,5 @@
 package com.gdu.wacdo.repositories;
 
-import com.gdu.wacdo.entities.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.gdu.wacdo.entities.Fonction;

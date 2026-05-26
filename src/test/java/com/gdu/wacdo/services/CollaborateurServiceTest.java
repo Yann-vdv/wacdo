@@ -2,7 +2,6 @@ package com.gdu.wacdo.services;
 
 import com.gdu.wacdo.DTO.NewCollabDTO;
 import com.gdu.wacdo.DTO.CollabDTO;
-import com.gdu.wacdo.repositories.CollaborateurRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,8 +23,6 @@ public class CollaborateurServiceTest {
 
     @Autowired
     private CollaborateurService collaborateurService;
-
-    private CollaborateurRepository collaborateurRepository;
 
     @BeforeEach
     void setup() {
